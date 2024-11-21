@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mrdor1stan.buonjourney.ui.common.InputWithLabel
 import com.mrdor1stan.buonjourney.ui.common.PrimaryButton
 import kotlinx.coroutines.launch
 
@@ -23,7 +24,9 @@ fun AddPlaceScreen(
     val scope = rememberCoroutineScope()
 
     Column(modifier) {
-        TextField(state.title, onValueChange = viewModel::updateTitle)
+        InputWithLabel(label = "Place name") {
+            TextField(state.title, onValueChange = viewModel::updateTitle)
+        }
         PrimaryButton("Add", enabled = state.isAddButtonEnabled, onClick = {
             scope.launch {
                 viewModel.addPlace()

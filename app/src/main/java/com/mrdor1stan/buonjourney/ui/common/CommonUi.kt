@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,19 +14,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -168,15 +178,21 @@ fun DatePicker(
 
 @Composable
 fun PrimaryButton(text: String, onClick: () -> Unit, enabled: Boolean) {
-    BodyText(text = text,
-        Modifier
-            .run {
-                if (enabled)
-                    background(Color.Magenta).clickable(onClick = onClick)
-                else
-                    background(Color.Gray)
-            }
-            .height(36.dp))
+    Button(onClick = onClick, Modifier.height(48.dp), enabled = enabled) {
+        BodyText(text = text)
+    }
+}
+
+@Composable
+fun InputWithLabel(
+    label: String,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        BodyText(text = label)
+        content()
+    }
 }
 
 
@@ -205,6 +221,38 @@ fun <T> ListWithHeader(
 @Composable
 fun Loader(modifier: Modifier = Modifier) {
     CircularProgressIndicator(
-        modifier = modifier.background(color = Color.DarkGray.copy(alpha = 0.2f)).fillMaxSize()
+        modifier = modifier
+            .background(color = Color.DarkGray.copy(alpha = 0.2f))
+            .fillMaxSize()
     )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun <T> Dropdown(
+    value: String, options: List<T>, displayOption: (T) -> String, onItemClick: (T) -> Unit
+) {
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
+    ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = { isExpanded = !isExpanded }) {
+        TextField(value = value,
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable),
+            onValueChange = {},
+            readOnly = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = isExpanded
+                )
+            })
+        ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
+            options.forEach { item ->
+                DropdownMenuItem(text = { BodyText(text = displayOption(item)) }, onClick = {
+                    onItemClick(item)
+                    isExpanded = false
+                }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
+            }
+        }
+    }
 }

@@ -21,6 +21,8 @@ import com.mrdor1stan.buonjourney.data.db.PlaceDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.ui.common.BodyText
 import com.mrdor1stan.buonjourney.ui.common.DatePicker
+import com.mrdor1stan.buonjourney.ui.common.Dropdown
+import com.mrdor1stan.buonjourney.ui.common.InputWithLabel
 import com.mrdor1stan.buonjourney.ui.common.PrimaryButton
 import kotlinx.coroutines.launch
 
@@ -67,53 +69,27 @@ fun AddTripScreen(
         PrimaryButton(text = state.endDate?.toShortString?.let { "End date: ${it}" }
             ?: "End start date", onClick = { showEndDatePicker = true }, enabled = true)
 
-
-        Dropdown(state.destination?.name ?: "", state.allPlaces, { it: PlaceDto -> it.name }, {
-            viewModel.updateDestination(it)
-        })
-
-        TextField(state.title, onValueChange = viewModel::updateTitle)
-        Dropdown(state.status.name,
-            TripDto.TripStatus.entries,
-            { it: TripDto.TripStatus -> it.name },
-            {
-                viewModel.updateStatus(it)
+        InputWithLabel("Destination") {
+            Dropdown(state.destination?.name ?: "", state.allPlaces, { it: PlaceDto -> it.name }, {
+                viewModel.updateDestination(it)
             })
+        }
+        InputWithLabel("Title") {
+            TextField(state.title, onValueChange = viewModel::updateTitle)
+        }
+        InputWithLabel("Status") {
+            Dropdown(state.status.name,
+                TripDto.TripStatus.entries,
+                { it: TripDto.TripStatus -> it.name },
+                {
+                    viewModel.updateStatus(it)
+                })
+        }
         PrimaryButton(text = "Add", onClick = {
             scope.launch {
                 viewModel.addTrip()
                 navigateBack()
             }
         }, enabled = state.isAddButtonEnabled)
-    }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun <T> Dropdown(
-    value: String, options: List<T>, displayOption: (T) -> String, onItemClick: (T) -> Unit
-) {
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
-    ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = { isExpanded = !isExpanded }) {
-        TextField(value = value,
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable),
-            onValueChange = {},
-            readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = isExpanded
-                )
-            })
-        ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
-            options.forEach { item ->
-                DropdownMenuItem(text = { BodyText(text = displayOption(item)) }, onClick = {
-                    onItemClick(item)
-                    isExpanded = false
-                }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                )
-            }
-        }
     }
 }
