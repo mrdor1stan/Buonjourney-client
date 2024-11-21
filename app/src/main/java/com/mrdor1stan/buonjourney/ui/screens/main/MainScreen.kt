@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.ui.common.ImageButton
 import com.mrdor1stan.buonjourney.ui.entities.*
@@ -27,6 +28,7 @@ import com.mrdor1stan.buonjourney.ui.screens.places.all.AllPlacesScreen
 import com.mrdor1stan.buonjourney.ui.screens.places.newone.AddPlaceScreen
 import com.mrdor1stan.buonjourney.ui.screens.profile.ProfileScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreen
+import com.mrdor1stan.buonjourney.ui.screens.trip.details.TripsDetailsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.newone.AddTripScreen
 
 
@@ -100,15 +102,24 @@ fun MainScreen(
             }
 
             composable<AllWishlistPlaces> {
-AllPlacesScreen(navigateToAddScreen = { navController.navigate(AddWishlistPlace) }) {
-    
-}
+                AllPlacesScreen(
+                    navigateToAddScreen = { navController.navigate(AddWishlistPlace) },
+                    navigateToItem = { navController.navigate(TripDetails(it)) })
             }
 
             composable<AddWishlistPlace> {
                 AddPlaceScreen(modifier = Modifier.fillMaxSize(), navigateBack = {
                     navController.navigateUp()
                 })
+            }
+
+            composable<TripDetails> {
+                val tripId = it.toRoute<TripDetails>().id
+                TripsDetailsScreen(
+                    tripId = tripId,
+                    navigateToPackingListScreen = { navController.navigate(AllPackingLists(tripId)) },
+                    navigateToEventsListScreen = { navController.navigate(AllEvents(tripId)) },
+                    navigateToTicketListScreen = { navController.navigate(AllTickets(tripId)) })
             }
 
         }

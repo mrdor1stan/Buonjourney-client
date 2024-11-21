@@ -6,16 +6,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -121,10 +125,22 @@ fun DatePicker(
     onSuccess: (LocalDateTime) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    currentDate: LocalDateTime? = null
+    currentDate: LocalDateTime? = null,
+    minDate: LocalDateTime? = null,
+    maxDate: LocalDateTime? = null
 ) {
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = (currentDate ?: LocalDateTime.now()).millis
+        initialSelectedDateMillis = currentDate?.millis,
+        initialDisplayedMonthMillis = (currentDate ?: LocalDateTime.now()).millis,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return when {
+                    minDate != null -> minDate.millis <= utcTimeMillis
+                    maxDate != null -> maxDate.millis >= utcTimeMillis
+                    else -> super.isSelectableDate(utcTimeMillis)
+                }
+            }
+        }
     )
     val confirmEnabled = remember {
         derivedStateOf {
@@ -184,4 +200,11 @@ fun <T> ListWithHeader(
             itemContent(it)
         }
     }
+}
+
+@Composable
+fun Loader(modifier: Modifier = Modifier) {
+    CircularProgressIndicator(
+        modifier = modifier.background(color = Color.DarkGray.copy(alpha = 0.2f)).fillMaxSize()
+    )
 }

@@ -15,6 +15,7 @@ data class TripState(
     val packingLists: List<PackingListDto>,
     val events: List<EventDto>,
     val tickets: List<TicketDto>,
+    val id: Long? = null,
 )
 
 data class TicketState(

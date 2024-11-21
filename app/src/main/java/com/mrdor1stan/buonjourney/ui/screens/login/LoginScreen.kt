@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.ui.common.BodyText
 import com.mrdor1stan.buonjourney.ui.common.Headline
+import com.mrdor1stan.buonjourney.ui.common.Loader
 
 @Composable
 fun LoginScreen(viewModel: LoginScreenViewModel = viewModel(factory = LoginScreenViewModel.Factory), modifier: Modifier = Modifier) {
@@ -23,7 +24,7 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel(factory = LoginScree
 
     Box(modifier = modifier) {
         if (state.isLoaderShown)
-            CircularProgressIndicator(modifier = Modifier.background(color = Color.DarkGray.copy(alpha = 0.2f)).fillMaxSize().align(Alignment.Center))
+            Loader(Modifier.align(Alignment.Center))
 
         Column (Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
             Headline(text = "Welcome to Buonjourney!")

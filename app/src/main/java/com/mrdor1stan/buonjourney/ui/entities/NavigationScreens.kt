@@ -12,19 +12,19 @@ object AddTrip
 data class TripDetails(val id: Long)
 
 @Serializable
-object AllTickets
+data class AllTickets(val tripId: Long)
 
 @Serializable
 data class TicketDetails(val id: Long)
 
 @Serializable
-object AllEvents
+data class AllEvents(val tripId: Long)
 
 @Serializable
 data class EventDetails(val id: Long)
 
 @Serializable
-object AllPackingLists
+data class AllPackingLists(val tripId: Long)
 
 @Serializable
 data class PackingListDetails(val id: Int)

@@ -1,6 +1,7 @@
 package com.mrdor1stan.buonjourney.ui.screens.trip.all
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +41,6 @@ fun AllTripsScreen(
         items = state.results,
         navigateToAddScreen = navigateToAddScreen,
     ) { item ->
-        TripElement(item)
+        TripElement(item, Modifier.padding(16.dp).clickable { item.id?.let { navigateToItem(it) } })
     }
 }

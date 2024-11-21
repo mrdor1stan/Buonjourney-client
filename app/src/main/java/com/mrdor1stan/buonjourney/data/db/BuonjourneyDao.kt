@@ -19,7 +19,7 @@ interface BuonjourneyDao {
 
     @Transaction
     @Query("SELECT * FROM trips WHERE id=:id")
-    fun getTrip(id: Int): Flow<TripsDetailsDto>
+    fun getTrip(id: Long): Flow<TripsDetailsDto>
 
     @Delete
     suspend fun deleteTrip(trip: TripDto)
