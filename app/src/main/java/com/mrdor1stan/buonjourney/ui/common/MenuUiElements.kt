@@ -97,18 +97,11 @@ fun TicketElement(
 @Composable
 fun PlaceElement(
     state: PlaceState =
-        PlaceState(
-            "National University of Kyiv-Mohyla Academy",
-            "Kontraktova square, 1",
-            "The best university in the whole damn world"
-        ),
+        PlaceState("Kyiv, Ukraine"),
     modifier: Modifier = Modifier.padding(16.dp)
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Headline(text = state.name)
-        TextIcon(text = state.address, iconRes = R.drawable.ic_place)
-        Spacer(modifier = Modifier.height(8.dp))
-        Description(text = state.description)
     }
 }
 

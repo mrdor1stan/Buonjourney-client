@@ -9,19 +9,19 @@ object MainMenu
 object AddTrip
 
 @Serializable
-data class TripDetails(val id: Int)
+data class TripDetails(val id: Long)
 
 @Serializable
 object AllTickets
 
 @Serializable
-data class TicketDetails(val id: Int)
+data class TicketDetails(val id: Long)
 
 @Serializable
 object AllEvents
 
 @Serializable
-data class EventDetails(val id: Int)
+data class EventDetails(val id: Long)
 
 @Serializable
 object AllPackingLists

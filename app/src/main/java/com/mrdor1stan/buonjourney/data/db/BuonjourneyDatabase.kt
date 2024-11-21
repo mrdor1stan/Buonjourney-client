@@ -4,8 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Database(entities = [TripDto::class, TicketDto::class, PlaceDto::class, PackingListDto:: class, PackingItemDto::class, EventDto::class], version = 1)
+@TypeConverters(DbTypeConverters::class)
 abstract class BuonjourneyDatabase: RoomDatabase() {
     abstract fun dao(): BuonjourneyDao
 
@@ -24,5 +29,13 @@ abstract class BuonjourneyDatabase: RoomDatabase() {
             }
         }
     }
+}
 
+@TypeConverters
+class DbTypeConverters {
+    @TypeConverter
+    fun fromLocalDateTime(date: LocalDateTime): String = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+    @TypeConverter
+    fun toLocalDateTime(dateString: String): LocalDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 }

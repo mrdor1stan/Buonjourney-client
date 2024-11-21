@@ -26,9 +26,7 @@ data class TicketState(
 )
 
 data class PlaceState(
-    val name: String,
-    val address: String,
-    val description: String
+    val name: String
 )
 
 data class PackingListState(

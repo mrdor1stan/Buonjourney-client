@@ -26,4 +26,21 @@ interface BuonjourneyDao {
 
     @Query("DELETE FROM trips WHERE id=:id")
     suspend fun deleteTrip(id: Int)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addPlace(place: PlaceDto)
+
+    @Transaction
+    @Query("SELECT * FROM places")
+    fun getPlaces(): Flow<List<PlaceDto>>
+
+    @Transaction
+    @Query("SELECT * FROM places WHERE id=:id")
+    fun getPlace(id: Int): Flow<PlaceDto>
+
+    @Delete
+    suspend fun deletePlaces(place: PlaceDto)
+
+    @Query("DELETE FROM places WHERE id=:id")
+    suspend fun deletePlaces(id: Int)
 }

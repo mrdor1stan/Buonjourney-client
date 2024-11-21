@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -66,8 +67,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,7 +83,6 @@ dependencies {
 
 //    implementation("androidx.paging:paging-compose-android:3.3.0")
 //    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
-//    implementation("androidx.room:room-runtime:2.6.1")
 //    implementation("androidx.room:room-paging:2.6.1")
 
 }
