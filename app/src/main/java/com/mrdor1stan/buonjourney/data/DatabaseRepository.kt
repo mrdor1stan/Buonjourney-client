@@ -1,6 +1,7 @@
 package com.mrdor1stan.buonjourney.data
 
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDao
+import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.data.db.PackingItemDto
 import com.mrdor1stan.buonjourney.data.db.PackingListDto
 import com.mrdor1stan.buonjourney.data.db.PlaceDto
@@ -24,4 +25,7 @@ class DatabaseRepository(private val dao: BuonjourneyDao) {
     fun getPackingList(listId: Long) = dao.getPackingList(listId)
     suspend fun updatePackingItem(item: PackingItemDto) = dao.updatePackingItem(item)
     suspend fun addPackingItem(item: PackingItemDto) = dao.addPackingItem(item)
+    fun getEvents(): Flow<List<EventDto>> = dao.getEvents()
+    fun getEventsByTrip(tripId: Long): Flow<List<EventDto>> = dao.getEventsByTrip(tripId)
+    suspend fun addEvent(event: EventDto) = dao.addEvent(event)
 }

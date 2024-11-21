@@ -59,4 +59,13 @@ interface BuonjourneyDao {
 
     @Insert
     suspend fun addPackingItem(item: PackingItemDto)
+
+    @Query("SELECT * FROM events ORDER BY dateTime DESC")
+    fun getEvents(): Flow<List<EventDto>>
+
+    @Query("SELECT * FROM events WHERE tripId=:tripId ORDER BY dateTime DESC")
+    fun getEventsByTrip(tripId: Long): Flow<List<EventDto>>
+
+    @Insert
+    suspend fun addEvent(event: EventDto)
 }

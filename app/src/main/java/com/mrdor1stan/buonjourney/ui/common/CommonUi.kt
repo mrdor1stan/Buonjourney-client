@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDefaults
@@ -22,6 +23,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
@@ -46,7 +48,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.dateFromMillis
+import com.mrdor1stan.buonjourney.common.extentions.formatString
 import com.mrdor1stan.buonjourney.common.extentions.millis
+import com.mrdor1stan.buonjourney.common.extentions.toShortString
+import com.mrdor1stan.buonjourney.data.db.EventDto
+import com.mrdor1stan.buonjourney.ui.entities.EventState
 import java.time.LocalDateTime
 
 
@@ -121,11 +127,13 @@ fun ImageButton(
 }
 
 @Composable
-fun ListHeader(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun ListHeader(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)?) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Headline(text = text, modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(16.dp))
-        ImageButton(iconRes = R.drawable.ic_add, onClick = onClick)
+        onClick?.let {
+            ImageButton(iconRes = R.drawable.ic_add, onClick = onClick)
+        }
     }
 }
 

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -120,9 +122,13 @@ fun EventElement(
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Headline(text = state.title)
-        Description(text = state.description)
+        state.description.takeIf { it.isNotEmpty() }?.let{
+            Description(text = state.description)
+        }
         TextIcon(text = state.dateTime.formatString, iconRes = R.drawable.ic_calendar)
-        TextIcon(text = state.address, iconRes = R.drawable.ic_place)
+        state.address.takeIf { it.isNotEmpty() }?.let {
+            TextIcon(text = state.address, iconRes = R.drawable.ic_place)
+        }
     }
 }
 
@@ -164,4 +170,30 @@ fun PackingList(
         }
     }
 
+}
+
+
+@Composable
+fun EventsList(events: List<EventState>, navigateToAddScreen: (() -> Unit)?, modifier: Modifier = Modifier) {
+    LazyColumn(modifier) {
+        item {
+            ListHeader(
+                "Events",
+                Modifier.padding(horizontal = 12.dp, vertical = 16.dp),
+                navigateToAddScreen
+            )
+        }
+        itemsIndexed(items = events) { index, item ->
+            val isStartOfGroup =
+                index == 0 || item.dateTime.toShortString != events[index - 1].dateTime.toShortString
+            item.let {
+                if (isStartOfGroup) {
+                    Headline(
+                        text = it.dateTime.toShortString)
+                }
+                EventElement(it)
+                if (!isStartOfGroup) HorizontalDivider()
+            }
+        }
+    }
 }
