@@ -1,6 +1,7 @@
 package com.mrdor1stan.buonjourney.data
 
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDao
+import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
 import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.data.db.PackingItemDto
 import com.mrdor1stan.buonjourney.data.db.PackingListDto
@@ -9,7 +10,9 @@ import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.data.db.TripsDetailsDto
 import kotlinx.coroutines.flow.Flow
 
-class DatabaseRepository(private val dao: BuonjourneyDao) {
+class DatabaseRepository(private val database: BuonjourneyDatabase) {
+    private val dao = database.dao()
+
     suspend fun addTrip(trip: TripDto) = dao.addTrip(trip)
     fun getTrips(): Flow<List<TripsDetailsDto>> = dao.getTrips()
     fun getTrip(id: Long): Flow<TripsDetailsDto> = dao.getTrip(id)
@@ -28,4 +31,7 @@ class DatabaseRepository(private val dao: BuonjourneyDao) {
     fun getEvents(): Flow<List<EventDto>> = dao.getEvents()
     fun getEventsByTrip(tripId: Long): Flow<List<EventDto>> = dao.getEventsByTrip(tripId)
     suspend fun addEvent(event: EventDto) = dao.addEvent(event)
+    fun eraseDatabase() {
+        database.clearAllTables()
+    }
 }

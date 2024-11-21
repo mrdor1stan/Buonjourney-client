@@ -43,11 +43,7 @@ inline fun <reified T : Any> shouldShowButton(currentScreen: NavBackStackEntry?)
     }
 
 @Composable
-fun MainScreen(
-    viewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
-    modifier: Modifier = Modifier
-) {
-    val state by viewModel.uiState.collectAsState()
+fun MainScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val currentScreen by navController.currentBackStackEntryAsState()
     val startDestination = MainMenu

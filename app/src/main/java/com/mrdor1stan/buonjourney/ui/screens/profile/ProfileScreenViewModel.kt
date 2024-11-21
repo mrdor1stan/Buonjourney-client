@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
+import com.mrdor1stan.buonjourney.data.DatabaseRepository
 import com.mrdor1stan.buonjourney.data.UserRepository
 import com.mrdor1stan.buonjourney.ui.screens.login.LoginScreenUiState
 import com.mrdor1stan.buonjourney.ui.screens.login.LoginScreenViewModel
@@ -20,6 +21,7 @@ data class ProfileScreenUiState(
 )
 
 class ProfileScreenViewModel(
+    private val databaseRepository: DatabaseRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -37,10 +39,15 @@ class ProfileScreenViewModel(
     }
 
 
-    fun onLogOutClick() {
-        viewModelScope.launch {
+    suspend fun onLogOutClick() {
             userRepository.logOut()
-        }
+       }
+
+    suspend fun eraseDatabase(){
+        databaseRepository.eraseDatabase()
+    }
+
+    fun showLoader(){
         _uiState.value = uiState.value.copy(isLoaderShown = true)
     }
 
@@ -50,7 +57,10 @@ class ProfileScreenViewModel(
                 val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
                 val userRepository: UserRepository =
                     application.appContainer.userRepository
+                val databaseRepository: DatabaseRepository =
+                    application.appContainer.databaseRepository
                 ProfileScreenViewModel(
+                    databaseRepository = databaseRepository,
                     userRepository = userRepository
                 )
             }

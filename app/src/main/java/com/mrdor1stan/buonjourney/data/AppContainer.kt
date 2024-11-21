@@ -11,7 +11,7 @@ class AppContainer(context: Context) {
         name = USER_PREFERENCES_NAME
     )
     val databaseRepository: DatabaseRepository by lazy {
-        DatabaseRepository(BuonjourneyDatabase.getDatabase(context).dao())
+        DatabaseRepository(BuonjourneyDatabase.getDatabase(context))
     }
     val userRepository: UserRepository by lazy {
         UserRepository(context.dataStore)
