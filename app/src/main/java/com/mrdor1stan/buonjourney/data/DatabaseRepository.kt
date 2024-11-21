@@ -1,6 +1,8 @@
 package com.mrdor1stan.buonjourney.data
 
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDao
+import com.mrdor1stan.buonjourney.data.db.PackingItemDto
+import com.mrdor1stan.buonjourney.data.db.PackingListDto
 import com.mrdor1stan.buonjourney.data.db.PlaceDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.data.db.TripsDetailsDto
@@ -17,4 +19,9 @@ class DatabaseRepository(private val dao: BuonjourneyDao) {
     fun getPlace(id: Int): Flow<PlaceDto> = dao.getPlace(id)
     suspend fun deletePlaces(place: PlaceDto) = dao.deletePlaces(place)
     suspend fun deletePlaces(id: Int) = dao.deletePlaces(id)
+    fun getPackingListsByTrip(tripId: Long) = dao.getPackingListsByTrip(tripId)
+    suspend fun addPackingList(list: PackingListDto) = dao.addPackingList(list)
+    fun getPackingList(listId: Long) = dao.getPackingList(listId)
+    suspend fun updatePackingItem(item: PackingItemDto) = dao.updatePackingItem(item)
+    suspend fun addPackingItem(item: PackingItemDto) = dao.addPackingItem(item)
 }

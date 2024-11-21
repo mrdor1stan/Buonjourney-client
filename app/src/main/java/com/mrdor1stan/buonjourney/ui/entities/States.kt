@@ -32,7 +32,8 @@ data class PlaceState(
 
 data class PackingListState(
     val name: String,
-    val items: List<PackingItemDto>
+    val items: List<PackingItemDto>,
+    val id: Long? = null
 )
 
 data class PackingItemState(

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -43,4 +44,19 @@ interface BuonjourneyDao {
 
     @Query("DELETE FROM places WHERE id=:id")
     suspend fun deletePlaces(id: Int)
+
+    @Query("SELECT * FROM packinglists WHERE tripId=:tripId")
+    fun getPackingListsByTrip(tripId: Long): Flow<List<PackingListWithItemsDto>>
+
+    @Insert
+    suspend fun addPackingList(list: PackingListDto)
+
+    @Query("SELECT * FROM packinglists WHERE id=:listId")
+    fun getPackingList(listId: Long): Flow<PackingListWithItemsDto>
+
+    @Update
+    suspend fun updatePackingItem(item: PackingItemDto)
+
+    @Insert
+    suspend fun addPackingItem(item: PackingItemDto)
 }

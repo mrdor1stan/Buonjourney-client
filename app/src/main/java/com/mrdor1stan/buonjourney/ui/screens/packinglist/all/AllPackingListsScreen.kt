@@ -9,22 +9,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.ui.common.ListWithHeader
+import com.mrdor1stan.buonjourney.ui.common.PackingList
 import com.mrdor1stan.buonjourney.ui.common.TripElement
 
 @Composable
-fun AllTripsScreen(
-    viewModel: AllTripsScreenViewModel = viewModel(factory = AllTripsScreenViewModel.Factory),
+fun AllPackingListsScreen(
+    tripId: Long,
+    viewModel: AllPackingListsScreenViewModel = viewModel(factory = AllPackingListsScreenViewModel.Factory(tripId)),
     modifier: Modifier = Modifier,
     navigateToAddScreen: () -> Unit,
     navigateToItem: (Long) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+
     ListWithHeader(
-        header = "All trips",
+        header = "Packing lists",
         modifier = modifier,
         items = state.results,
         navigateToAddScreen = navigateToAddScreen,
     ) { item ->
-        TripElement(item, Modifier.padding(16.dp).clickable { item.id?.let { navigateToItem(it) } })
+        PackingList(item, Modifier.padding(16.dp).clickable { item.id?.let { navigateToItem(it) } })
     }
 }

@@ -16,29 +16,39 @@ import com.mrdor1stan.buonjourney.ui.common.TripElement
 @Composable
 fun TripsDetailsScreen(
     tripId: Long,
-    viewModel: TripsDetailsScreenViewModel = viewModel(factory = TripsDetailsScreenViewModel.Factory(tripId)),
+    viewModel: TripsDetailsScreenViewModel = viewModel(
+        factory = TripsDetailsScreenViewModel.Factory(
+            tripId
+        )
+    ),
     modifier: Modifier = Modifier,
     navigateToPackingListScreen: () -> Unit,
     navigateToEventsListScreen: () -> Unit,
     navigateToTicketListScreen: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
-    when(val trip = state.trip) {
+    when (val trip = state.trip) {
         null -> Loader()
         else ->
             Column {
                 TripElement(trip)
-                PrimaryButton(text = "Events", onClick = navigateToEventsListScreen, enabled = true)
-                PrimaryButton(
-                    text = "Packing lists",
-                    onClick = navigateToPackingListScreen,
-                    enabled = true
-                )
-                PrimaryButton(
-                    text = "Tickets",
-                    onClick = navigateToTicketListScreen,
-                    enabled = true
-                )
+                Row {
+                    PrimaryButton(
+                        text = "Events",
+                        onClick = navigateToEventsListScreen,
+                        enabled = true
+                    )
+                    PrimaryButton(
+                        text = "Packing lists",
+                        onClick = navigateToPackingListScreen,
+                        enabled = true
+                    )
+//                PrimaryButton(
+//                    text = "Tickets",
+//                    onClick = navigateToTicketListScreen,
+//                    enabled = true
+//                )
+                }
             }
     }
 

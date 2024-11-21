@@ -27,19 +27,19 @@ data class EventDetails(val id: Long)
 data class AllPackingLists(val tripId: Long)
 
 @Serializable
-data class PackingListDetails(val id: Int)
+data class PackingListDetails(val id: Long)
 
 @Serializable
-data class WishlistPlaceDetails(val id: Int)
+data class WishlistPlaceDetails(val id: Long)
 
 @Serializable
 object AddTicket
 
 @Serializable
-object AddEvent
+class AddEvent(val tripId: Long)
 
 @Serializable
-object AddPackingList
+class AddPackingList(val tripId: Long)
 
 @Serializable
 object Profile
