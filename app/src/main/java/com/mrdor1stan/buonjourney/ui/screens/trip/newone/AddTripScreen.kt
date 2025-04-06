@@ -1,11 +1,7 @@
 package com.mrdor1stan.buonjourney.ui.screens.trip.newone
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,11 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
 import com.mrdor1stan.buonjourney.data.db.PlaceDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
-import com.mrdor1stan.buonjourney.ui.common.BodyText
 import com.mrdor1stan.buonjourney.ui.common.DatePicker
 import com.mrdor1stan.buonjourney.ui.common.Dropdown
 import com.mrdor1stan.buonjourney.ui.common.InputWithLabel
@@ -29,12 +25,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTripScreen(
-    viewModel: AddTripScreenViewModel = viewModel(factory = AddTripScreenViewModel.Factory),
+    tripId: Long?,
+    viewModel: AddTripScreenViewModel = viewModel(factory = AddTripScreenViewModel.Factory(tripId)),
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showStartDatePicker by remember {
         mutableStateOf(false)
     }

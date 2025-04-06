@@ -9,9 +9,12 @@ import androidx.room.TypeConverters
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@Database(entities = [TripDto::class, TicketDto::class, PlaceDto::class, PackingListDto:: class, PackingItemDto::class, EventDto::class], version = 1)
+@Database(
+    entities = [TripDto::class, TicketDto::class, PlaceDto::class, PackingListDto::class, PackingListItemDto::class, EventDto::class],
+    version = 1,
+)
 @TypeConverters(DbTypeConverters::class)
-abstract class BuonjourneyDatabase: RoomDatabase() {
+abstract class BuonjourneyDatabase : RoomDatabase() {
     abstract fun dao(): BuonjourneyDao
 
     companion object {
@@ -19,15 +22,14 @@ abstract class BuonjourneyDatabase: RoomDatabase() {
         private var instance: BuonjourneyDatabase? = null
         private const val DATABASE_NAME = "buonjourney_db"
 
-        fun getDatabase(context: Context): BuonjourneyDatabase {
-            return instance ?: synchronized(this) {
+        fun getDatabase(context: Context): BuonjourneyDatabase =
+            instance ?: synchronized(this) {
                 Room
                     .databaseBuilder(context, BuonjourneyDatabase::class.java, DATABASE_NAME)
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }
             }
-        }
     }
 }
 

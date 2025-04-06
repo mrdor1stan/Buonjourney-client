@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mrdor1stan.buonjourney.ui.common.ListWithHeader
 import com.mrdor1stan.buonjourney.ui.common.Loader
 import com.mrdor1stan.buonjourney.ui.common.PrimaryButton
 import com.mrdor1stan.buonjourney.ui.common.TripElement

@@ -14,49 +14,58 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class AllEventsScreenUiState(
-    val results: List<EventState>
+    val results: List<EventState>,
 )
 
 class AllEventsScreenViewModel(
     private val tripId: Long?,
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(
-        AllEventsScreenUiState(results = listOf())
-    )
+    private val _uiState =
+        MutableStateFlow(
+            AllEventsScreenUiState(results = listOf()),
+        )
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            (tripId?.let {
-                databaseRepository.getEventsByTrip(tripId)
-            } ?: databaseRepository.getEvents())
-                .collect { events ->
-                    _uiState.value = uiState.value.copy(results = events.map {
-                        EventState(
-                            title = it.title,
-                            dateTime = it.dateTime,
-                            description = it.description,
-                            address = it.address
-                        )
-                    })
-                }
-        }
-    }
-
-    companion object {
-        fun Factory(tripId: Long?): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
-                val databaseRepository: DatabaseRepository =
-                    application.appContainer.databaseRepository
-                AllEventsScreenViewModel(
-                    tripId = tripId,
-                    databaseRepository = databaseRepository
-                )
+            (
+                tripId?.let {
+                    databaseRepository.getEventsByTrip(tripId)
+                } ?: databaseRepository.getEvents()
+            ).collect { events ->
+                _uiState.value =
+                    uiState.value.copy(
+                        results =
+                            events.map {
+                                EventState(
+                                    title = it.title,
+                                    dateTime = it.dateTime,
+                                    description = it.description,
+                                    address = it.address,
+                                )
+                            },
+                    )
             }
         }
     }
 
+    suspend fun deleteEvent(eventId: Int) {
+       // databaseRepository.deleteEvent(eventId)
+    }
+
+    companion object {
+        fun Factory(tripId: Long?): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
+                    val databaseRepository: DatabaseRepository =
+                        application.appContainer.databaseRepository
+                    AllEventsScreenViewModel(
+                        tripId = tripId,
+                        databaseRepository = databaseRepository,
+                    )
+                }
+            }
+    }
 }

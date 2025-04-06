@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 object MainMenu
 
 @Serializable
-object AddTrip
+data class AddTrip(val id: Long?)
 
 @Serializable
 data class TripDetails(val id: Long)
@@ -22,9 +22,6 @@ data class AllEvents(val tripId: Long?)
 
 @Serializable
 data class EventDetails(val id: Long)
-
-@Serializable
-data class AllPackingLists(val tripId: Long)
 
 @Serializable
 data class PackingListDetails(val id: Long)

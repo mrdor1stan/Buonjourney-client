@@ -6,9 +6,11 @@ import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
 
 const val USER_PREFERENCES_NAME = "user_preferences_name"
 
-class AppContainer(context: Context) {
+class AppContainer(
+    context: Context,
+) {
     private val Context.dataStore by preferencesDataStore(
-        name = USER_PREFERENCES_NAME
+        name = USER_PREFERENCES_NAME,
     )
     val databaseRepository: DatabaseRepository by lazy {
         DatabaseRepository(BuonjourneyDatabase.getDatabase(context))

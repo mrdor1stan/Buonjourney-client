@@ -31,7 +31,7 @@ class AllPlacesScreenViewModel(
         viewModelScope.launch {
             databaseRepository.getPlaces().collect { places ->
                 _uiState.value = uiState.value.copy(results = places.map {
-                    PlaceState(name = it.name)
+                    PlaceState(name = it.name, id = it.id)
                 })
             }
         }

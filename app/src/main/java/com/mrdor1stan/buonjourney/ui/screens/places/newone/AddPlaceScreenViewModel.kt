@@ -13,18 +13,19 @@ import kotlinx.coroutines.flow.asStateFlow
 
 data class AddPlaceScreenUiState(
     val title: String,
-    val isAddButtonEnabled: Boolean
+    val isAddButtonEnabled: Boolean,
 )
 
 class AddPlaceScreenViewModel(
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(
-        AddPlaceScreenUiState(
-            "", false
+    private val _uiState =
+        MutableStateFlow(
+            AddPlaceScreenUiState(
+                "",
+                false,
+            ),
         )
-    )
     val uiState = _uiState.asStateFlow()
 
     fun updateTitle(value: String) {
@@ -33,28 +34,29 @@ class AddPlaceScreenViewModel(
     }
 
     fun validateAddButton() {
-        _uiState.value = uiState.value.copy(
-            isAddButtonEnabled = uiState.value.title.isNotEmpty()
-        )
+        _uiState.value =
+            uiState.value.copy(
+                isAddButtonEnabled = uiState.value.title.isNotEmpty(),
+            )
     }
 
     suspend fun addPlace() {
         databaseRepository.addPlace(
-            PlaceDto(name = uiState.value.title)
+            PlaceDto(name = uiState.value.title),
         )
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
-                val databaseRepository: DatabaseRepository =
-                    application.appContainer.databaseRepository
-                AddPlaceScreenViewModel(
-                    databaseRepository = databaseRepository
-                )
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
+                    val databaseRepository: DatabaseRepository =
+                        application.appContainer.databaseRepository
+                    AddPlaceScreenViewModel(
+                        databaseRepository = databaseRepository,
+                    )
+                }
             }
-        }
     }
-
 }

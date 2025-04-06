@@ -7,31 +7,31 @@ data class TripsDetailsDto(
     @Embedded val trip: TripDto,
     @Relation(
         parentColumn = "id",
-        entityColumn = "tripId"
+        entityColumn = "tripId",
     )
     val tickets: List<TicketDto>,
     @Relation(
         parentColumn = "id",
-        entityColumn = "tripId"
+        entityColumn = "tripId",
     )
     val events: List<EventDto>,
     @Relation(
         parentColumn = "id",
-        entityColumn = "tripId"
+        entityColumn = "tripId",
     )
     val packingLists: List<PackingListDto>,
     @Relation(
         parentColumn = "placeId",
-        entityColumn = "id"
+        entityColumn = "id",
     )
-    val place: PlaceDto
+    val place: PlaceDto,
 )
 
 data class PackingListWithItemsDto(
     @Embedded val list: PackingListDto,
     @Relation(
         parentColumn = "id",
-        entityColumn = "listId"
+        entityColumn = "listId",
     )
-    val items: List<PackingItemDto>
+    val items: List<PackingListItemDto>,
 )

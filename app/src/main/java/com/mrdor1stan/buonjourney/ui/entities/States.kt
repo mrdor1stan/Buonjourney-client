@@ -1,10 +1,14 @@
 package com.mrdor1stan.buonjourney.ui.entities
 import com.mrdor1stan.buonjourney.data.db.EventDto
-import com.mrdor1stan.buonjourney.data.db.PackingItemDto
+import com.mrdor1stan.buonjourney.data.db.PackingListItemDto
 import com.mrdor1stan.buonjourney.data.db.PackingListDto
 import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import java.time.LocalDateTime
+
+interface DataState {
+    val id: Long?
+}
 
 data class TripState(
     val startDate: LocalDateTime,
@@ -15,8 +19,8 @@ data class TripState(
     val packingLists: List<PackingListDto>,
     val events: List<EventDto>,
     val tickets: List<TicketDto>,
-    val id: Long? = null,
-)
+    override val id: Long? = null,
+): DataState
 
 data class TicketState(
     val fileUrl: String,
@@ -27,14 +31,15 @@ data class TicketState(
 )
 
 data class PlaceState(
-    val name: String
-)
+    val name: String,
+    override val id: Long? = null
+): DataState
 
 data class PackingListState(
     val name: String,
-    val items: List<PackingItemDto>,
-    val id: Long? = null
-)
+    val items: List<PackingListItemDto>,
+    override val id: Long? = null
+): DataState
 
 data class PackingItemState(
     val name: String,

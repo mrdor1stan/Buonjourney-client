@@ -3,6 +3,7 @@ package com.mrdor1stan.buonjourney.remote
 import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 
+
 data class UserEntity(
 val id: Long,
     val username: String,

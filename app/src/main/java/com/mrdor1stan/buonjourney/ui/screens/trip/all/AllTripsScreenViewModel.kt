@@ -52,6 +52,8 @@ class AllTripsScreenViewModel(
         }
     }
 
+    suspend fun deleteTrip(id: Long) = databaseRepository.deleteTrip(id)
+
     companion object {
         val Factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {

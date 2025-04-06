@@ -31,7 +31,6 @@ import com.mrdor1stan.buonjourney.ui.screens.packinglist.newone.AddPackingListSc
 import com.mrdor1stan.buonjourney.ui.screens.places.all.AllPlacesScreen
 import com.mrdor1stan.buonjourney.ui.screens.places.newone.AddPlaceScreen
 import com.mrdor1stan.buonjourney.ui.screens.profile.ProfileScreen
-import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllPackingListsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.details.TripsDetailsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.newone.AddTripScreen
@@ -86,12 +85,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable<MainMenu> {
-                AllTripsScreen(navigateToAddScreen = { navController.navigate(AddTrip) },
+                AllTripsScreen(navigateToAddScreen = { id -> navController.navigate(AddTrip(id)) },
                     navigateToItem = { id -> navController.navigate(TripDetails(id)) })
             }
 
             composable<AddTrip> {
-                AddTripScreen {
+                val tripId = it.toRoute<AddTrip>().id
+                AddTripScreen(tripId = tripId) {
                     navController.navigateUp()
                 }
             }
@@ -114,17 +114,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
             composable<TripDetails> {
                 val tripId = it.toRoute<TripDetails>().id
                 TripsDetailsScreen(tripId = tripId,
-                    navigateToPackingListScreen = { navController.navigate(AllPackingLists(tripId)) },
+                    navigateToPackingListScreen = { //navController.navigate(AllPackingLists(tripId))
+                         },
                     navigateToEventsListScreen = { navController.navigate(AllEvents(tripId)) },
                     navigateToTicketListScreen = { navController.navigate(AllTickets(tripId)) })
             }
 
-            composable<AllPackingLists> {
-                val tripId = it.toRoute<AllPackingLists>().tripId
-                AllPackingListsScreen(tripId = tripId,
-                    navigateToAddScreen = { navController.navigate(AddPackingList(tripId)) },
-                    navigateToItem = { id -> navController.navigate(PackingListDetails(id)) })
-            }
             composable<PackingListDetails> {
                 val listId = it.toRoute<PackingListDetails>().id
                 PackingListDetailsScreen(listId)

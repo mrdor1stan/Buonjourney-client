@@ -10,11 +10,6 @@ import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
 import com.mrdor1stan.buonjourney.data.db.PlaceDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
-import com.mrdor1stan.buonjourney.ui.entities.PlaceState
-import com.mrdor1stan.buonjourney.ui.entities.TripDetails
-import com.mrdor1stan.buonjourney.ui.entities.TripState
-import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreenUiState
-import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreenViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,24 +26,39 @@ data class AddTripScreenUiState(
 )
 
 class AddTripScreenViewModel(
+    val tripId: Long?,
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        AddTripScreenUiState(
-            null, null, "", null,
-            TripDto.TripStatus.PLANNED, false, listOf()
+    private val _uiState: MutableStateFlow<AddTripScreenUiState> =
+        MutableStateFlow(
+            AddTripScreenUiState(
+                null, null, "", null,
+                TripDto.TripStatus.PLANNED, false, listOf()
+            )
         )
-    )
-    val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            if (tripId != null) {
+                databaseRepository.getTrip(tripId)?.collect {
+                    _uiState.value = uiState.value.copy(
+                        startDate = it.trip.startDate,
+                        endDate = it.trip.endDate,
+                        title = it.trip.title,
+                        destination = it.place,
+                        status = it.trip.status
+                    )
+                }
+            }
             databaseRepository.getPlaces().collect { places ->
                 _uiState.value = uiState.value.copy(allPlaces = places)
             }
         }
     }
+
+    val uiState = _uiState.asStateFlow()
+
 
     fun updateStartDate(date: LocalDateTime) {
         _uiState.value = uiState.value.copy(startDate = date)
@@ -75,7 +85,7 @@ class AddTripScreenViewModel(
         validateAddButton()
     }
 
-    fun validateAddButton() {
+    private fun validateAddButton() {
         _uiState.value = uiState.value.copy(
             isAddButtonEnabled =
             uiState.value.run {
@@ -100,12 +110,13 @@ class AddTripScreenViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
+        fun Factory(tripId: Long?): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
                 val databaseRepository: DatabaseRepository =
                     application.appContainer.databaseRepository
                 AddTripScreenViewModel(
+                    tripId = tripId,
                     databaseRepository = databaseRepository
                 )
             }

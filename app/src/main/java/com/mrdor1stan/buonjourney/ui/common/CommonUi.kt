@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,16 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
@@ -43,16 +41,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.dateFromMillis
-import com.mrdor1stan.buonjourney.common.extentions.formatString
 import com.mrdor1stan.buonjourney.common.extentions.millis
-import com.mrdor1stan.buonjourney.common.extentions.toShortString
-import com.mrdor1stan.buonjourney.data.db.EventDto
-import com.mrdor1stan.buonjourney.ui.entities.EventState
 import java.time.LocalDateTime
 
 
@@ -204,27 +201,6 @@ fun InputWithLabel(
 }
 
 
-@Composable
-fun <T> ListWithHeader(
-    header: String,
-    items: List<T>,
-    modifier: Modifier = Modifier,
-    navigateToAddScreen: () -> Unit,
-    itemContent: @Composable (T) -> Unit
-) {
-    LazyColumn(modifier) {
-        item {
-            ListHeader(
-                header,
-                Modifier.padding(horizontal = 12.dp, vertical = 16.dp),
-                navigateToAddScreen
-            )
-        }
-        items(items = items) {
-            itemContent(it)
-        }
-    }
-}
 
 @Composable
 fun Loader(modifier: Modifier = Modifier) {
@@ -235,32 +211,3 @@ fun Loader(modifier: Modifier = Modifier) {
     )
 }
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun <T> Dropdown(
-    value: String, options: List<T>, displayOption: (T) -> String, onItemClick: (T) -> Unit
-) {
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
-    ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = { isExpanded = !isExpanded }) {
-        TextField(value = value,
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable),
-            onValueChange = {},
-            readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = isExpanded
-                )
-            })
-        ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
-            options.forEach { item ->
-                DropdownMenuItem(text = { BodyText(text = displayOption(item)) }, onClick = {
-                    onItemClick(item)
-                    isExpanded = false
-                }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                )
-            }
-        }
-    }
-}
