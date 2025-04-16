@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mrdor1stan.buonjourney.ui.entities.DataState
 
-data class ActionState(val label: String, val icon: ImageVector, val onClick: (Long) -> Unit)
+data class ActionState<T>(val label: String, val icon: ImageVector, val onClick: (T) -> Unit)
 
 @Composable
-fun ActionMenu(modifier: Modifier = Modifier, item: DataState, actions: List<ActionState>) {
+fun<T> ActionMenu(modifier: Modifier = Modifier, item: DataState<T>, actions: List<ActionState<T>>) {
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -40,7 +40,7 @@ fun ActionMenu(modifier: Modifier = Modifier, item: DataState, actions: List<Act
                 DropdownMenuItem(
                     text = { Text(action.label) },
                     leadingIcon = { Icon(action.icon, contentDescription = null) },
-                    onClick = { item?.id?.let { itemId -> action.onClick(itemId) } }
+                    onClick = { item.id?.let { itemId -> action.onClick(itemId) } }
                 )
             }
             HorizontalDivider()

@@ -7,21 +7,21 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
-import com.mrdor1stan.buonjourney.data.db.PlaceDto
+import com.mrdor1stan.buonjourney.data.db.CityDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-data class AddPlaceScreenUiState(
+data class AddCityScreenUiState(
     val title: String,
     val isAddButtonEnabled: Boolean,
 )
 
-class AddPlaceScreenViewModel(
+class AddCityScreenViewModel(
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(
-            AddPlaceScreenUiState(
+            AddCityScreenUiState(
                 "",
                 false,
             ),
@@ -40,9 +40,9 @@ class AddPlaceScreenViewModel(
             )
     }
 
-    suspend fun addPlace() {
-        databaseRepository.addPlace(
-            PlaceDto(name = uiState.value.title),
+    suspend fun addCity() {
+        databaseRepository.addCity(
+            CityDto(name = uiState.value.title),
         )
     }
 
@@ -53,7 +53,7 @@ class AddPlaceScreenViewModel(
                     val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
                     val databaseRepository: DatabaseRepository =
                         application.appContainer.databaseRepository
-                    AddPlaceScreenViewModel(
+                    AddCityScreenViewModel(
                         databaseRepository = databaseRepository,
                     )
                 }

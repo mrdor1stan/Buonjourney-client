@@ -1,6 +1,7 @@
 package com.mrdor1stan.buonjourney.data.db
 
 import androidx.room.Embedded
+import androidx.room.Junction
 import androidx.room.Relation
 
 data class TripsDetailsDto(
@@ -9,22 +10,23 @@ data class TripsDetailsDto(
         parentColumn = "id",
         entityColumn = "tripId",
     )
-    val tickets: List<TicketDto>,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "tripId",
-    )
     val events: List<EventDto>,
     @Relation(
+        entity = PackingListDto::class,
         parentColumn = "id",
         entityColumn = "tripId",
     )
-    val packingLists: List<PackingListDto>,
+    val packingList: PackingListWithItemsDto,
     @Relation(
-        parentColumn = "placeId",
+        parentColumn = "id",
         entityColumn = "id",
+        associateBy = Junction(
+            TripCityCrossRef::class,
+            parentColumn = "tripId",
+            entityColumn = "cityId"
+        )
     )
-    val place: PlaceDto,
+    val cities: List<CityDto>
 )
 
 data class PackingListWithItemsDto(

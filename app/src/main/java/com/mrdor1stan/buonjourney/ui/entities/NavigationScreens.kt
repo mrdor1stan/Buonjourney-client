@@ -27,7 +27,7 @@ data class EventDetails(val id: Long)
 data class PackingListDetails(val id: Long)
 
 @Serializable
-data class WishlistPlaceDetails(val id: Long)
+data class WishlistCityDetails(val id: Long)
 
 @Serializable
 object AddTicket
@@ -42,7 +42,7 @@ class AddPackingList(val tripId: Long)
 object Profile
 
 @Serializable
-object AllWishlistPlaces
+object AllWishlistCities
 
 @Serializable
-object AddWishlistPlace
+object AddWishlistCity

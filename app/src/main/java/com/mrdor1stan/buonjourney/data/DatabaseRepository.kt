@@ -4,7 +4,7 @@ import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
 import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.data.db.PackingListDto
 import com.mrdor1stan.buonjourney.data.db.PackingListItemDto
-import com.mrdor1stan.buonjourney.data.db.PlaceDto
+import com.mrdor1stan.buonjourney.data.db.CityDto
 import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.data.db.TripsDetailsDto
@@ -43,15 +43,15 @@ class DatabaseRepository(
 
     suspend fun deleteTicket(id: Long) = dao.deleteTicket(id)
 
-    suspend fun addPlace(place: PlaceDto) = dao.addPlace(place)
+    suspend fun addCity(place: CityDto) = dao.addCity(place)
 
-    fun getPlaces(): Flow<List<PlaceDto>> = dao.getPlaces()
+    fun getCities(): Flow<List<CityDto>> = dao.getCities()
 
-    fun getPlace(id: Long): Flow<PlaceDto> = dao.getPlace(id)
+    fun getCity(id: Long): Flow<CityDto> = dao.getCity(id)
 
-    suspend fun deletePlace(place: PlaceDto) = dao.deletePlace(place)
+    suspend fun deleteCity(place: CityDto) = dao.deleteCity(place)
 
-    suspend fun deletePlace(id: Long) = dao.deletePlace(id)
+    suspend fun deleteCity(id: Long) = dao.deleteCity(id)
 
     fun getPackingListsByTrip(tripId: Long) = dao.getPackingListsByTrip(tripId)
 

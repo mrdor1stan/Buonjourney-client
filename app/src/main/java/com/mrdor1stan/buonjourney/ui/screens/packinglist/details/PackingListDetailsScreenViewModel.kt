@@ -56,7 +56,6 @@ class PackingListDetailsScreenViewModel(
                         packingList =
                             list.let {
                                 PackingListState(
-                                    name = it.list.name,
                                     items = it.items,
                                 )
                             },

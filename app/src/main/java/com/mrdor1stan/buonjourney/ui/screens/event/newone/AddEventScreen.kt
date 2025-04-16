@@ -13,10 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
-import com.mrdor1stan.buonjourney.data.db.PlaceDto
-import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.ui.common.DatePicker
-import com.mrdor1stan.buonjourney.ui.common.Dropdown
 import com.mrdor1stan.buonjourney.ui.common.InputWithLabel
 import com.mrdor1stan.buonjourney.ui.common.PrimaryButton
 import kotlinx.coroutines.launch

@@ -29,15 +29,15 @@ import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.ui.entities.EventState
 import com.mrdor1stan.buonjourney.ui.entities.PackingItemState
 import com.mrdor1stan.buonjourney.ui.entities.PackingListState
-import com.mrdor1stan.buonjourney.ui.entities.PlaceState
-import com.mrdor1stan.buonjourney.ui.entities.TicketState
+import com.mrdor1stan.buonjourney.ui.entities.CityState
 import com.mrdor1stan.buonjourney.ui.entities.TripState
 import java.time.LocalDateTime
 
-val DEFAULT_ACTIONS = listOf(
+val DEFAULT_ACTIONS = listOf<ActionState<Long>>(
     ActionState(label = "delete_button", icon = Icons.Outlined.Delete, onClick = {}),
     ActionState(label = "edit_button", icon = Icons.Outlined.Edit, onClick = {}),
 )
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Preview
@@ -48,13 +48,12 @@ fun TripElement(
             LocalDateTime.now(),
             LocalDateTime.now().plusDays(7),
             "Mega trip",
-            "Kyiv, Ukraine",
+            listOf(CityState("Kyiv, Ukraine")),
             TripDto.TripStatus.PLANNED,
-            packingLists = listOf(),
+            packingList = PackingListState(listOf()),
             events = listOf(),
-            tickets = listOf()
         ), modifier: Modifier = Modifier.padding(16.dp),
-    actions: List<ActionState> = DEFAULT_ACTIONS
+    actions: List<ActionState<Long>> = DEFAULT_ACTIONS
 ) {
     Row(
         modifier, horizontalArrangement = Arrangement.spacedBy(
@@ -71,12 +70,10 @@ fun TripElement(
 
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Headline(text = state.title)
-                TextIcon(text = state.destination, iconRes = R.drawable.ic_globe)
+                TextIcon(text = state.destinations.joinToString { it.name }, iconRes = R.drawable.ic_globe)
 
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    TextIcon(state.packingLists.size.toString(), R.drawable.ic_checklist)
                     TextIcon(state.events.size.toString(), R.drawable.ic_event)
-                    TextIcon(state.tickets.size.toString(), R.drawable.ic_ticket)
                 }
             }
 
@@ -91,31 +88,12 @@ fun TripElement(
     }
 }
 
-@Preview
-@Composable
-fun TicketElement(
-    state: TicketState =
-        TicketState(
-            fileUrl = "",
-            LocalDateTime.now(),
-            "Train to Kyiv",
-            true,
-            ticketType = TicketDto.TicketType.TRAIN
-        ),
-    modifier: Modifier = Modifier.padding(16.dp)
-) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Headline(text = state.caption)
-        TextIcon(text = state.dateTime.formatString, iconRes = R.drawable.ic_calendar)
-    }
-}
-
 
 @Preview
 @Composable
-fun PlaceElement(
-    state: PlaceState =
-        PlaceState("Kyiv, Ukraine"),
+fun CityElement(
+    state: CityState =
+        CityState("Kyiv, Ukraine"),
     modifier: Modifier = Modifier.padding(16.dp)
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -169,12 +147,10 @@ fun PackingItem(
 @Preview
 @Composable
 fun PackingList(
-    state: PackingListState = PackingListState(
-        "Things i packed", items = listOf(),
+    state: PackingListState = PackingListState(items = listOf(),
     ), modifier: Modifier = Modifier
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Headline(text = state.name)
         val (checked, unchecked) = state.items.partition { it.isPacked }
         Row(
             verticalAlignment = Alignment.CenterVertically,

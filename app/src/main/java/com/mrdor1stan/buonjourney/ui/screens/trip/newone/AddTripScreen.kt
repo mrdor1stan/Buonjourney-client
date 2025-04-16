@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
-import com.mrdor1stan.buonjourney.data.db.PlaceDto
+import com.mrdor1stan.buonjourney.data.db.CityDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.ui.common.DatePicker
 import com.mrdor1stan.buonjourney.ui.common.Dropdown
@@ -67,8 +66,8 @@ fun AddTripScreen(
             ?: "End start date", onClick = { showEndDatePicker = true }, enabled = true)
 
         InputWithLabel("Destination") {
-            Dropdown(state.destination?.name ?: "", state.allPlaces, { it: PlaceDto -> it.name }, {
-                viewModel.updateDestination(it)
+            Dropdown(state.destinations?.joinToString { it.name } ?: "", state.allCities, { it: CityDto -> it.name }, {
+               // viewModel.updateDestination(it)
             })
         }
         InputWithLabel("Title") {

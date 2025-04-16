@@ -8,30 +8,30 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
-import com.mrdor1stan.buonjourney.ui.entities.PlaceState
+import com.mrdor1stan.buonjourney.ui.entities.CityState
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreenViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class AllPlacesScreenUiState(
-    val results: List<PlaceState>
+data class AllCitiesScreenUiState(
+    val results: List<CityState>
 )
 
-class AllPlacesScreenViewModel(
+class AllCitiesScreenViewModel(
     private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        AllPlacesScreenUiState(results = listOf())
+        AllCitiesScreenUiState(results = listOf())
     )
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            databaseRepository.getPlaces().collect { places ->
-                _uiState.value = uiState.value.copy(results = places.map {
-                    PlaceState(name = it.name, id = it.id)
+            databaseRepository.getCities().collect { cities ->
+                _uiState.value = uiState.value.copy(results = cities.map {
+                    CityState(name = it.name, id = it.id)
                 })
             }
         }
@@ -43,7 +43,7 @@ class AllPlacesScreenViewModel(
                 val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
                 val databaseRepository: DatabaseRepository =
                     application.appContainer.databaseRepository
-                AllPlacesScreenViewModel(
+                AllCitiesScreenViewModel(
                     databaseRepository = databaseRepository
                 )
             }

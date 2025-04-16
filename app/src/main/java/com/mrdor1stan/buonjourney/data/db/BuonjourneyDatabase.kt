@@ -10,8 +10,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Database(
-    entities = [TripDto::class, TicketDto::class, PlaceDto::class, PackingListDto::class, PackingListItemDto::class, EventDto::class],
-    version = 1,
+    entities = [TripDto::class, TicketDto::class, CityDto::class, PackingListDto::class, PackingListItemDto::class, EventDto::class, TripCityCrossRef::class],
+    version = 2,
 )
 @TypeConverters(DbTypeConverters::class)
 abstract class BuonjourneyDatabase : RoomDatabase() {

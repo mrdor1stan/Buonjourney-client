@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
-import com.mrdor1stan.buonjourney.data.db.PlaceDto
+import com.mrdor1stan.buonjourney.data.db.CityDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,10 +19,10 @@ data class AddTripScreenUiState(
     val startDate: LocalDateTime?,
     val endDate: LocalDateTime?,
     val title: String,
-    val destination: PlaceDto?,
+    val destinations: List<CityDto>,
     val status: TripDto.TripStatus,
     val isAddButtonEnabled: Boolean,
-    val allPlaces: List<PlaceDto>
+    val allCities: List<CityDto>
 )
 
 class AddTripScreenViewModel(
@@ -33,7 +33,7 @@ class AddTripScreenViewModel(
     private val _uiState: MutableStateFlow<AddTripScreenUiState> =
         MutableStateFlow(
             AddTripScreenUiState(
-                null, null, "", null,
+                null, null, "", listOf(),
                 TripDto.TripStatus.PLANNED, false, listOf()
             )
         )
@@ -46,13 +46,13 @@ class AddTripScreenViewModel(
                         startDate = it.trip.startDate,
                         endDate = it.trip.endDate,
                         title = it.trip.title,
-                        destination = it.place,
+                        destinations = it.cities,
                         status = it.trip.status
                     )
                 }
             }
-            databaseRepository.getPlaces().collect { places ->
-                _uiState.value = uiState.value.copy(allPlaces = places)
+            databaseRepository.getCities().collect { cities ->
+                _uiState.value = uiState.value.copy(allCities = cities)
             }
         }
     }
@@ -74,11 +74,11 @@ class AddTripScreenViewModel(
         _uiState.value = uiState.value.copy(title = value)
         validateAddButton()
     }
-
-    fun updateDestination(value: PlaceDto) {
-        _uiState.value = uiState.value.copy(destination = value)
-        validateAddButton()
-    }
+// TODO: add multiple destinations
+//    fun updateDestination(value: CityDto) {
+//        _uiState.value = uiState.value.copy(destination = value)
+//        validateAddButton()
+//    }
 
     fun updateStatus(status: TripDto.TripStatus) {
         _uiState.value = uiState.value.copy(status = status)
@@ -90,7 +90,6 @@ class AddTripScreenViewModel(
             isAddButtonEnabled =
             uiState.value.run {
                 startDate != null && endDate != null && startDate < endDate && title.isNotEmpty()
-                        && destination != null
             }
         )
     }
@@ -102,7 +101,6 @@ class AddTripScreenViewModel(
                     startDate = startDate!!,
                     endDate = endDate!!,
                     title = title,
-                    placeId = destination!!.id,
                     status = status
                 )
             }

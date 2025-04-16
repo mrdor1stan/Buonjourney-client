@@ -3,17 +3,13 @@ package com.mrdor1stan.buonjourney.ui.screens.event.newone
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
-import com.mrdor1stan.buonjourney.data.db.PlaceDto
 import com.mrdor1stan.buonjourney.data.db.EventDto
-import com.mrdor1stan.buonjourney.ui.entities.EventState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 data class AddEventScreenUiState(

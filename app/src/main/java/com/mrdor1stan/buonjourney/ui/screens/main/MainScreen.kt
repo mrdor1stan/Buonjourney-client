@@ -28,8 +28,8 @@ import com.mrdor1stan.buonjourney.ui.screens.event.all.AllEventsScreen
 import com.mrdor1stan.buonjourney.ui.screens.event.newone.AddEventScreen
 import com.mrdor1stan.buonjourney.ui.screens.packinglist.details.PackingListDetailsScreen
 import com.mrdor1stan.buonjourney.ui.screens.packinglist.newone.AddPackingListScreen
-import com.mrdor1stan.buonjourney.ui.screens.places.all.AllPlacesScreen
-import com.mrdor1stan.buonjourney.ui.screens.places.newone.AddPlaceScreen
+import com.mrdor1stan.buonjourney.ui.screens.places.all.AllCitiesScreen
+import com.mrdor1stan.buonjourney.ui.screens.places.newone.AddCityScreen
 import com.mrdor1stan.buonjourney.ui.screens.profile.ProfileScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.details.TripsDetailsScreen
@@ -50,7 +50,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
     val showBackButton = shouldShowButton<MainMenu>(currentScreen) ?: false
     val showProfileButton = shouldShowButton<Profile>(currentScreen) ?: false
-    val showPlacesButton = shouldShowButton<AllWishlistPlaces>(currentScreen) ?: false
+    val showCitiesButton = shouldShowButton<AllWishlistCities>(currentScreen) ?: false
     val showEventsButton = shouldShowButton<AllEvents>(currentScreen) ?: false
 
     Scaffold(modifier = modifier, topBar = {
@@ -71,9 +71,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 }
                 if (showEventsButton) ImageButton(iconRes = R.drawable.ic_event,
                     onClick = { navController.navigate(AllEvents(null)) })
-                if (showPlacesButton) ImageButton(
+                if (showCitiesButton) ImageButton(
                     iconRes = R.drawable.ic_globe,
-                    onClick = { navController.navigate(AllWishlistPlaces) })
+                    onClick = { navController.navigate(AllWishlistCities) })
             }
             HorizontalDivider()
         }
@@ -100,13 +100,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 ProfileScreen(modifier = Modifier.fillMaxSize())
             }
 
-            composable<AllWishlistPlaces> {
-                AllPlacesScreen(navigateToAddScreen = { navController.navigate(AddWishlistPlace) },
+            composable<AllWishlistCities> {
+                AllCitiesScreen(navigateToAddScreen = { navController.navigate(AddWishlistCity) },
                     navigateToItem = { navController.navigate(TripDetails(it)) })
             }
 
-            composable<AddWishlistPlace> {
-                AddPlaceScreen(modifier = Modifier.fillMaxSize(), navigateBack = {
+            composable<AddWishlistCity> {
+                AddCityScreen(modifier = Modifier.fillMaxSize(), navigateBack = {
                     navController.navigateUp()
                 })
             }

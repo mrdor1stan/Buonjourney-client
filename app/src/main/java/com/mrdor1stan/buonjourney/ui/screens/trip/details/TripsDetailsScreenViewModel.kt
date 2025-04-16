@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
 import com.mrdor1stan.buonjourney.ui.entities.TripState
+import com.mrdor1stan.buonjourney.ui.entities.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,16 +32,7 @@ class TripsDetailsScreenViewModel(
         viewModelScope.launch {
             databaseRepository.getTrip(tripId).collect { trip ->
                 _uiState.value = uiState.value.copy(trip = trip.let {
-                    TripState(
-                        startDate = it.trip.startDate,
-                        endDate = it.trip.endDate,
-                        tickets = it.tickets,
-                        title = it.trip.title,
-                        destination = it.place.name,
-                        packingLists = it.packingLists,
-                        status = it.trip.status,
-                        events = it.events
-                    )
+                    trip.map()
                 })
 
             }

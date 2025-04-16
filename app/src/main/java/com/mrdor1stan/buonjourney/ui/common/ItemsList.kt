@@ -13,13 +13,13 @@ import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.ui.entities.DataState
 
 @Composable
-fun <T: DataState> ItemsListWithHeader(
+fun <T, E: DataState<T>> ItemsListWithHeader(
     header: String,
-    items: List<T>,
-    actions: List<ActionState> = DEFAULT_ACTIONS,
+    items: List<E>,
+    actions: List<ActionState<T>> = listOf(),
     modifier: Modifier = Modifier,
     navigateToAddScreen: () -> Unit,
-    itemContent: @Composable (T, List<ActionState>) -> Unit
+    itemContent: @Composable (E, List<ActionState<T>>) -> Unit
 ) {
     LazyColumn(modifier) {
         item {

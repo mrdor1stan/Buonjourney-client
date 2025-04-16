@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPlaceScreen(
-    viewModel: AddPlaceScreenViewModel = viewModel(factory = AddPlaceScreenViewModel.Factory),
+fun AddCityScreen(
+    viewModel: AddCityScreenViewModel = viewModel(factory = AddCityScreenViewModel.Factory),
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
@@ -24,12 +24,12 @@ fun AddPlaceScreen(
     val scope = rememberCoroutineScope()
 
     Column(modifier) {
-        InputWithLabel(label = "Place name") {
+        InputWithLabel(label = "City name") {
             TextField(state.title, onValueChange = viewModel::updateTitle)
         }
         PrimaryButton("Add", enabled = state.isAddButtonEnabled, onClick = {
             scope.launch {
-                viewModel.addPlace()
+                viewModel.addCity()
             }.invokeOnCompletion {
                 navigateBack()
             }

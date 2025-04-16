@@ -41,7 +41,7 @@ class AddPackingListScreenViewModel(
 
     suspend fun addPackingList() {
         databaseRepository.addPackingList(
-            PackingListDto(name = uiState.value.title, tripId = tripId)
+            PackingListDto(tripId = tripId)
         )
     }
 

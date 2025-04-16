@@ -29,21 +29,21 @@ interface BuonjourneyDao {
     suspend fun deleteTrip(id: Long)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addPlace(place: PlaceDto)
+    suspend fun addCity(place: CityDto)
 
     @Transaction
-    @Query("SELECT * FROM places")
-    fun getPlaces(): Flow<List<PlaceDto>>
+    @Query("SELECT * FROM cities")
+    fun getCities(): Flow<List<CityDto>>
 
     @Transaction
-    @Query("SELECT * FROM places WHERE id=:id")
-    fun getPlace(id: Long): Flow<PlaceDto>
+    @Query("SELECT * FROM cities WHERE id=:id")
+    fun getCity(id: Long): Flow<CityDto>
 
     @Delete
-    suspend fun deletePlace(place: PlaceDto)
+    suspend fun deleteCity(place: CityDto)
 
-    @Query("DELETE FROM places WHERE id=:id")
-    suspend fun deletePlace(id: Long)
+    @Query("DELETE FROM cities WHERE id=:id")
+    suspend fun deleteCity(id: Long)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTicket(trip: TicketDto)
