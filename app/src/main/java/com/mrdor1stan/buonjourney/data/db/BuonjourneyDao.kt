@@ -37,7 +37,7 @@ interface BuonjourneyDao {
 
     @Transaction
     @Query("SELECT * FROM cities WHERE id=:id")
-    fun getCity(id: Long): Flow<CityDto>
+    fun getCity(id: String): Flow<CityDto>
 
     @Delete
     suspend fun deleteCity(place: CityDto)

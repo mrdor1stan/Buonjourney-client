@@ -39,10 +39,11 @@ fun TripsDetailsDto.map() =
 
 data class CityState(
     val name: String,
-    override val id: String? = null
+    val country: String,
+    override val id: String? = null,
 ) : DataState<String>
 
-fun CityDto.map() = CityState(name, id)
+fun CityDto.map() = CityState(name, id, country)
 
 data class PackingListState(
     val items: List<PackingListItemDto>,

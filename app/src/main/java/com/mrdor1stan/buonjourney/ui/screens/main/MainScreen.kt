@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -42,10 +40,14 @@ inline fun <reified T : Any> shouldShowButton(currentScreen: NavBackStackEntry?)
     }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, placeLink: String?) {
+
     val navController = rememberNavController()
     val currentScreen by navController.currentBackStackEntryAsState()
     val startDestination = MainMenu
+
+    if (placeLink != null)
+        navController.navigate(AddWishlistCity(placeLink = placeLink, id = null))
 
 
     val showBackButton = shouldShowButton<MainMenu>(currentScreen) ?: false
@@ -101,12 +103,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
             }
 
             composable<AllWishlistCities> {
-                AllCitiesScreen(navigateToAddScreen = { navController.navigate(AddWishlistCity) },
+                AllCitiesScreen(navigateToAddScreen = { navController.navigate(AddWishlistCity(null, null)) },
                     navigateToItem = { navController.navigate(TripDetails(it)) })
             }
 
             composable<AddWishlistCity> {
-                AddCityScreen(modifier = Modifier.fillMaxSize(), navigateBack = {
+                val placeLink = it.toRoute<AddWishlistCity>().placeLink
+                val cityId = it.toRoute<AddWishlistCity>().id
+                AddCityScreen(placeLink = placeLink, cityId = cityId, modifier = Modifier.fillMaxSize(), navigateBack = {
                     navController.navigateUp()
                 })
             }

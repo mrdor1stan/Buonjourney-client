@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
 import com.mrdor1stan.buonjourney.ui.entities.CityState
+import com.mrdor1stan.buonjourney.ui.entities.map
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreenViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,7 @@ class AllCitiesScreenViewModel(
         viewModelScope.launch {
             databaseRepository.getCities().collect { cities ->
                 _uiState.value = uiState.value.copy(results = cities.map {
-                    CityState(name = it.name, id = it.id)
+                    it.map()
                 })
             }
         }

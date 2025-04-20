@@ -45,4 +45,4 @@ object Profile
 object AllWishlistCities
 
 @Serializable
-object AddWishlistCity
+data class AddWishlistCity(val placeLink: String?, val id: String?)

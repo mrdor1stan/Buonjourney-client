@@ -47,7 +47,7 @@ class DatabaseRepository(
 
     fun getCities(): Flow<List<CityDto>> = dao.getCities()
 
-    fun getCity(id: Long): Flow<CityDto> = dao.getCity(id)
+    fun getCity(id: String): Flow<CityDto> = dao.getCity(id)
 
     suspend fun deleteCity(place: CityDto) = dao.deleteCity(place)
 

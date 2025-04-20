@@ -48,7 +48,7 @@ fun TripElement(
             LocalDateTime.now(),
             LocalDateTime.now().plusDays(7),
             "Mega trip",
-            listOf(CityState("Kyiv, Ukraine")),
+            listOf(CityState("Kyiv", country = "Ukraine")),
             TripDto.TripStatus.PLANNED,
             packingList = PackingListState(listOf()),
             events = listOf(),
@@ -93,7 +93,7 @@ fun TripElement(
 @Composable
 fun CityElement(
     state: CityState =
-        CityState("Kyiv, Ukraine"),
+        CityState("Kyiv", "Ukraine"),
     modifier: Modifier = Modifier.padding(16.dp)
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {

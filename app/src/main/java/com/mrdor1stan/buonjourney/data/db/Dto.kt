@@ -40,6 +40,7 @@ data class TicketDto(
 data class CityDto(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val name: String,
+    val country: String
 )
 
 

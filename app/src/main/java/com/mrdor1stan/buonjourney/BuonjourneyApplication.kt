@@ -9,8 +9,8 @@ class BuonjourneyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Places.initialize(applicationContext, BuildConfig.MAPS_API_KEY)
         appContainer = AppContainer(context = this)
+
     }
 
 }

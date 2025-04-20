@@ -16,13 +16,13 @@ import androidx.compose.ui.Modifier
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun <T> Dropdown(
-    value: String, options: List<T>, displayOption: (T) -> String, onItemClick: (T) -> Unit
+    inputValue: String, options: List<T>, getDisplayString: (T) -> String, onItemClick: (T) -> Unit
 ) {
     var isExpanded by remember {
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = { isExpanded = !isExpanded }) {
-        TextField(value = value,
+        TextField(value = inputValue,
             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable),
             onValueChange = {},
             readOnly = true,
@@ -33,7 +33,7 @@ fun <T> Dropdown(
             })
         ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
             options.forEach { item ->
-                DropdownMenuItem(text = { BodyText(text = displayOption(item)) }, onClick = {
+                DropdownMenuItem(text = { BodyText(text = getDisplayString(item)) }, onClick = {
                     onItemClick(item)
                     isExpanded = false
                 }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding

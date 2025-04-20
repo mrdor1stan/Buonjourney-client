@@ -92,6 +92,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.places)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
 
 //    implementation("androidx.paging:paging-compose-android:3.3.0")
 //    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
