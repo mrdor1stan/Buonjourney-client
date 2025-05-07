@@ -19,9 +19,11 @@ import kotlinx.coroutines.launch
 private const val TAG = "AddCityScreenViewModel"
 
 data class CountryState(val name: String, val flag: String?)
+
 fun CountryResponse.map() = CountryState(name, flag)
 
 data class AddCityScreenUiState(
+    val selectedPlaceType: PlaceType,
     val title: String,
     val isAddButtonEnabled: Boolean,
     val selectedCountry: String,
@@ -31,12 +33,13 @@ data class AddCityScreenUiState(
 class AddCityScreenViewModel(
     private val databaseRepository: DatabaseRepository,
     private val countriesRepository: CountriesRepository,
-    cityId: String?,
+    private val cityId: String?,
     placeLink: String?,
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(
             AddCityScreenUiState(
+                selectedPlaceType = PlaceType.City,
                 title = "",
                 isAddButtonEnabled = false,
                 selectedCountry = "",
@@ -44,28 +47,31 @@ class AddCityScreenViewModel(
             ),
         )
 
+    val uiState = _uiState.asStateFlow()
+
     init {
-        cityId?.let {
-            viewModelScope.launch {
-                databaseRepository.getCity(it).collect {
+
+        Log.d(TAG, "cityId: $cityId")
+        viewModelScope.launch {
+            if (cityId != null) {
+                databaseRepository.getCity(cityId).collect {
                     _uiState.value =
                         uiState.value.copy(title = it.name, selectedCountry = it.country)
-                    validateAddButton()
+                    Log.d(TAG, uiState.value.toString())
                 }
             }
         }
 
         viewModelScope.launch {
             try {
-                val countries = countriesRepository.getCountries()
+                val countries = countriesRepository.getCountries().sortedBy { it.name }
+                Log.d(TAG, countries.joinToString { it.toString() })
                 _uiState.value = uiState.value.copy(countriesList = countries.map { it.map() })
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
             }
         }
     }
-
-    val uiState = _uiState.asStateFlow()
 
     fun updateTitle(value: String) {
         _uiState.value = uiState.value.copy(title = value)
@@ -77,6 +83,11 @@ class AddCityScreenViewModel(
         validateAddButton()
     }
 
+    fun updatePlaceType(type: PlaceType) {
+        _uiState.value = uiState.value.copy(selectedPlaceType = type)
+        validateAddButton()
+    }
+
     private fun validateAddButton() {
         _uiState.value =
             uiState.value.copy(
@@ -85,12 +96,23 @@ class AddCityScreenViewModel(
     }
 
     suspend fun addCity() {
-        databaseRepository.addCity(
-            CityDto(
-                name = uiState.value.title,
-                country = uiState.value.selectedCountry
-            ),
-        )
+        when (cityId) {
+            null -> databaseRepository.addCity(
+                CityDto(
+                    name = uiState.value.title,
+                    country = uiState.value.selectedCountry
+                )
+            )
+
+            else -> databaseRepository.updateCity(
+                CityDto(
+                    name = uiState.value.title,
+                    country = uiState.value.selectedCountry,
+                    id = cityId
+                )
+            )
+        }
+
     }
 
     companion object {

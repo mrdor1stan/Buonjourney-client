@@ -8,6 +8,6 @@ data class CountriesResponse(
 
 data class CountryResponse(
     val name: String,
-    @SerializedName("unicodeflag") val flag: String?
+    @SerializedName("unicodeFlag") val flag: String?
 )
 

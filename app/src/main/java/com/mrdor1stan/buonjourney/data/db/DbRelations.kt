@@ -12,11 +12,10 @@ data class TripsDetailsDto(
     )
     val events: List<EventDto>,
     @Relation(
-        entity = PackingListDto::class,
         parentColumn = "id",
         entityColumn = "tripId",
     )
-    val packingList: PackingListWithItemsDto,
+    val packingItems: List<PackingListNodeDto>,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
@@ -29,11 +28,3 @@ data class TripsDetailsDto(
     val cities: List<CityDto>
 )
 
-data class PackingListWithItemsDto(
-    @Embedded val list: PackingListDto,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "listId",
-    )
-    val items: List<PackingListItemDto>,
-)

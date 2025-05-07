@@ -1,9 +1,15 @@
 package com.mrdor1stan.buonjourney.ui.entities
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
+
+data class TopLevelRoute<T>(val name: String, val route: T, val icon: ImageVector)
 
 @Serializable
 object MainMenu
+
+@Serializable
+object AllTrips
 
 @Serializable
 data class AddTrip(val id: Long?)
@@ -24,19 +30,13 @@ data class AllEvents(val tripId: Long?)
 data class EventDetails(val id: Long)
 
 @Serializable
-data class PackingListDetails(val id: Long)
-
-@Serializable
 data class WishlistCityDetails(val id: Long)
 
 @Serializable
 object AddTicket
 
 @Serializable
-class AddEvent(val tripId: Long)
-
-@Serializable
-class AddPackingList(val tripId: Long)
+class AddEvent(val tripId: Long, val eventId: Long?)
 
 @Serializable
 object Profile

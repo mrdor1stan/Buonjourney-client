@@ -23,7 +23,7 @@ class AppContainer(
             .build()
 
     val countriesRepository: CountriesRepository by lazy {
-        CountriesRepository(countriesRetrofit.create(CountriesApiService::class.java))
+        CountriesRepository(countriesRetrofit.create(CountriesApiService::class.java), context)
     }
 
     val databaseRepository: DatabaseRepository by lazy {

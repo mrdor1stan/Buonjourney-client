@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.material)
+    implementation(libs.material.icons)
     implementation(libs.androidx.material3)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

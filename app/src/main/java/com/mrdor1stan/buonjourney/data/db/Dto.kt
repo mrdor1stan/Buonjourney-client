@@ -89,7 +89,7 @@ data class AttractionDto(
 }
 
 @Entity(
-    tableName = "packinglists",
+    tableName = "packingitems",
     foreignKeys = [ForeignKey(
         entity = TripDto::class,
         parentColumns = ["id"],
@@ -97,29 +97,17 @@ data class AttractionDto(
         onDelete = CASCADE
     )]
 )
-data class PackingListDto(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val tripId: Long,
-)
-
-@Entity(
-    tableName = "packingitems",
-    foreignKeys = [ForeignKey(
-        entity = PackingListDto::class,
-        parentColumns = ["id"],
-        childColumns = ["listId"],
-        onDelete = CASCADE
-    )]
-)
-data class PackingListItemDto(
+data class PackingListNodeDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
     val isPacked: Boolean,
-    val listId: Long,
-)
-
+    val tripId: Long,
+    val nodeType: Type,
+    val ordinal: Int
+) {
+    enum class Type { ListItem, Header }
+}
 
 @Entity(
     tableName = "events",

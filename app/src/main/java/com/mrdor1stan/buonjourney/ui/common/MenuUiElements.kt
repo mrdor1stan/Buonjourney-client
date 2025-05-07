@@ -24,16 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.formatString
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
-import com.mrdor1stan.buonjourney.data.db.TicketDto
+import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
-import com.mrdor1stan.buonjourney.ui.entities.EventState
-import com.mrdor1stan.buonjourney.ui.entities.PackingItemState
-import com.mrdor1stan.buonjourney.ui.entities.PackingListState
 import com.mrdor1stan.buonjourney.ui.entities.CityState
+import com.mrdor1stan.buonjourney.ui.entities.EventState
 import com.mrdor1stan.buonjourney.ui.entities.TripState
 import java.time.LocalDateTime
 
-val DEFAULT_ACTIONS = listOf<ActionState<Long>>(
+fun<T> getDefaultActions() = listOf<ActionState<T>>(
     ActionState(label = "delete_button", icon = Icons.Outlined.Delete, onClick = {}),
     ActionState(label = "edit_button", icon = Icons.Outlined.Edit, onClick = {}),
 )
@@ -50,10 +48,10 @@ fun TripElement(
             "Mega trip",
             listOf(CityState("Kyiv", country = "Ukraine")),
             TripDto.TripStatus.PLANNED,
-            packingList = PackingListState(listOf()),
+            packingList = listOf(),
             events = listOf(),
         ), modifier: Modifier = Modifier.padding(16.dp),
-    actions: List<ActionState<Long>> = DEFAULT_ACTIONS
+    actions: List<ActionState<Long>> = getDefaultActions()
 ) {
     Row(
         modifier, horizontalArrangement = Arrangement.spacedBy(
@@ -62,15 +60,20 @@ fun TripElement(
             )
         )
     ) {
-        Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(
-            dimensionResource(
-                id = R.dimen.small_margin
-            )
-        ), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(
+                dimensionResource(
+                    id = R.dimen.small_margin
+                )
+            ), verticalAlignment = Alignment.CenterVertically
+        ) {
 
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Headline(text = state.title)
-                TextIcon(text = state.destinations.joinToString { it.name }, iconRes = R.drawable.ic_globe)
+                TextIcon(
+                    text = state.destinations.joinToString { it.name },
+                    iconRes = R.drawable.ic_globe
+                )
 
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     TextIcon(state.events.size.toString(), R.drawable.ic_event)
@@ -94,10 +97,21 @@ fun TripElement(
 fun CityElement(
     state: CityState =
         CityState("Kyiv", "Ukraine"),
-    modifier: Modifier = Modifier.padding(16.dp)
+    modifier: Modifier = Modifier.padding(16.dp),
+    actions: List<ActionState<String>> = getDefaultActions()
 ) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Headline(text = state.name)
+    Row(
+        modifier, horizontalArrangement = Arrangement.spacedBy(
+            dimensionResource(
+                id = R.dimen.middle_margin
+            )
+        )
+    ) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Headline(text = state.name)
+            Description(text = state.country)
+        }
+        ActionMenu(actions = actions, item = state)
     }
 }
 
@@ -126,58 +140,18 @@ fun EventElement(
     }
 }
 
-@Preview
-@Composable
-fun PackingItem(
-    state: PackingItemState = PackingItemState(
-        "Blanket", isPacked = true
-    ), modifier: Modifier = Modifier
-) {
-    Row(
-        modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Checkbox(isChecked = state.isPacked)
-        BodyText(text = state.name)
-    }
-}
-
-
-@Preview
-@Composable
-fun PackingList(
-    state: PackingListState = PackingListState(items = listOf(),
-    ), modifier: Modifier = Modifier
-) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        val (checked, unchecked) = state.items.partition { it.isPacked }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            TextIcon(text = checked.size.toString(), iconRes = R.drawable.ic_checkbox)
-            TextIcon(text = unchecked.size.toString(), iconRes = R.drawable.ic_checkbox_blank)
-        }
-    }
-
-}
-
-
 @Composable
 fun EventsList(
     events: List<EventState>,
-    navigateToAddScreen: (() -> Unit)?,
+    navigateToAddScreen: (Long?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier) {
         item {
             ListHeader(
                 "Events",
-                Modifier.padding(horizontal = 12.dp, vertical = 16.dp),
-                navigateToAddScreen
-            )
+                Modifier.padding(horizontal = 12.dp, vertical = 16.dp)
+            ) { navigateToAddScreen(null) }
         }
         itemsIndexed(items = events) { index, item ->
             val isStartOfGroup =

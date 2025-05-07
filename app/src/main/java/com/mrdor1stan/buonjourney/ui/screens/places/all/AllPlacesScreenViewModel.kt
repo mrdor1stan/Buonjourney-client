@@ -38,6 +38,11 @@ class AllCitiesScreenViewModel(
         }
     }
 
+    suspend fun deleteCity(cityId: String){
+        databaseRepository.deleteCity(cityId)
+
+    }
+
     companion object {
         val Factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {

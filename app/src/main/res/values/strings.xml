@@ -2,4 +2,21 @@
     <string name="app_name">Buonjourney</string>
     <string name="delete_button">Delete</string>
     <string name="edit_button">Edit</string>
+    <string name="save_button_label">Save</string>
+    <string name="schedule_title">Schedule</string>
+    <string name="packing_list_title">Packing list</string>
+    <string name="desires_title">Desires</string>
+    <string name="city">City</string>
+    <string name="attraction">Attraction</string>
+    <string name="add_list_item_button">Add as list item</string>
+    <string name="add_category_button">Add as category</string>
+    <string name="check_mode">Check mode</string>
+    <string name="edit_mode">Edit mode</string>
+    <string name="reorder_mode">Reorder mode</string>
+    <string name="move_item_upward">Move item upward</string>
+    <string name="move_item_downward">Move item downward</string>
+    <string name="rename_item">Rename item</string>
+    <string name="remove_item">Remove item</string>
+    <string name="cancel_button_label">Cancel</string>
+    <string name="enter_new_name">Enter new name</string>
 </resources>

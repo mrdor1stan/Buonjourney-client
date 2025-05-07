@@ -11,7 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
 import com.mrdor1stan.buonjourney.ui.common.DatePicker
 import com.mrdor1stan.buonjourney.ui.common.InputWithLabel
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddEventScreen(
     tripId: Long,
+    eventId: Long?,
     viewModel: AddEventScreenViewModel = viewModel(factory = AddEventScreenViewModel.Factory(tripId)),
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit
@@ -55,7 +58,7 @@ fun AddEventScreen(
             TextField(state.description, onValueChange = viewModel::updateDescription)
         }
 
-        PrimaryButton(text = "Add", onClick = {
+        PrimaryButton(text = stringResource(R.string.save_button_label), onClick = {
             scope.launch {
                 viewModel.addEvent()
                 navigateBack()

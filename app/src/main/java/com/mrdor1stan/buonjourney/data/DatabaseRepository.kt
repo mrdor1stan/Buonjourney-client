@@ -1,9 +1,9 @@
 package com.mrdor1stan.buonjourney.data
 
+import androidx.room.Transaction
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
 import com.mrdor1stan.buonjourney.data.db.EventDto
-import com.mrdor1stan.buonjourney.data.db.PackingListDto
-import com.mrdor1stan.buonjourney.data.db.PackingListItemDto
+import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
 import com.mrdor1stan.buonjourney.data.db.CityDto
 import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
@@ -51,23 +51,21 @@ class DatabaseRepository(
 
     suspend fun deleteCity(place: CityDto) = dao.deleteCity(place)
 
-    suspend fun deleteCity(id: Long) = dao.deleteCity(id)
+    suspend fun deleteCity(id: String) = dao.deleteCity(id)
 
-    fun getPackingListsByTrip(tripId: Long) = dao.getPackingListsByTrip(tripId)
+    suspend fun updateCity(city: CityDto) = dao.updateCity(city)
 
-    suspend fun addPackingList(list: PackingListDto) = dao.addPackingList(list)
+    suspend fun updatePackingItem(item: PackingListNodeDto) = dao.updatePackingItem(item)
 
-    fun getPackingList(listId: Long) = dao.getPackingList(listId)
+    @Transaction
+    suspend fun swapItemsOrder(item1: PackingListNodeDto, item2: PackingListNodeDto) {
+        dao.updatePackingItemOrdinal(item1.id, item2.ordinal)
+        dao.updatePackingItemOrdinal(item2.id, item1.ordinal)
+    }
 
-    suspend fun deletePackingList(id: Long) = dao.deletePackingList(id)
+    suspend fun addPackingItem(item: PackingListNodeDto) = dao.addPackingItem(item)
 
-    suspend fun deletePackingList(list: PackingListDto) = dao.deletePackingList(list)
-
-    suspend fun updatePackingItem(item: PackingListItemDto) = dao.updatePackingItem(item)
-
-    suspend fun addPackingItem(item: PackingListItemDto) = dao.addPackingItem(item)
-
-    suspend fun deletePackingItem(item: PackingListItemDto) = dao.deletePackingItem(item)
+    suspend fun deletePackingItem(item: PackingListNodeDto) = dao.deletePackingItem(item)
 
     suspend fun addTicket(trip: TicketDto) = dao.addTicket(trip)
 

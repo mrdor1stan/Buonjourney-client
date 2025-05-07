@@ -48,6 +48,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }

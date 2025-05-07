@@ -16,7 +16,7 @@ fun AllEventsScreen(
         )
     ),
     modifier: Modifier = Modifier,
-    navigateToAddScreen: (() -> Unit)?
+    navigateToAddScreen: (eventId: Long?) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     EventsList(

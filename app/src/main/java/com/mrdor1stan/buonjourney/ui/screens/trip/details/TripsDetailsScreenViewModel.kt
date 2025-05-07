@@ -10,6 +10,7 @@ import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
 import com.mrdor1stan.buonjourney.ui.entities.TripState
 import com.mrdor1stan.buonjourney.ui.entities.map
+import com.mrdor1stan.buonjourney.ui.screens.packinglist.details.PackingListDetailsScreenUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,16 +32,18 @@ class TripsDetailsScreenViewModel(
     init {
         viewModelScope.launch {
             databaseRepository.getTrip(tripId).collect { trip ->
-                _uiState.value = uiState.value.copy(trip = trip.let {
-                    trip.map()
-                })
+                _uiState.value = uiState.value.copy(
+                    trip = trip.let {
+                        trip.map()
+                    }
+                )
 
             }
         }
     }
 
     companion object {
-        fun Factory(tripId: Long) : ViewModelProvider.Factory = viewModelFactory {
+        fun Factory(tripId: Long): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as BuonjourneyApplication)
                 val databaseRepository: DatabaseRepository =

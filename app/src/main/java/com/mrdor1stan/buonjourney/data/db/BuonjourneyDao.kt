@@ -43,7 +43,10 @@ interface BuonjourneyDao {
     suspend fun deleteCity(place: CityDto)
 
     @Query("DELETE FROM cities WHERE id=:id")
-    suspend fun deleteCity(id: Long)
+    suspend fun deleteCity(id: String)
+
+    @Update
+    suspend fun updateCity(city: CityDto)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTicket(trip: TicketDto)
@@ -62,29 +65,17 @@ interface BuonjourneyDao {
     @Query("DELETE FROM tickets WHERE id=:id")
     suspend fun deleteTicket(id: Long)
 
-    @Query("SELECT * FROM packinglists WHERE tripId=:tripId")
-    fun getPackingListsByTrip(tripId: Long): Flow<List<PackingListWithItemsDto>>
-
-    @Insert
-    suspend fun addPackingList(list: PackingListDto)
-
-    @Query("SELECT * FROM packinglists WHERE id=:id")
-    fun getPackingList(id: Long): Flow<PackingListWithItemsDto>
-
-    @Delete
-    suspend fun deletePackingList(list: PackingListDto)
-
-    @Query("DELETE FROM packinglists WHERE id=:id")
-    suspend fun deletePackingList(id: Long)
-
     @Update
-    suspend fun updatePackingItem(item: PackingListItemDto)
+    suspend fun updatePackingItem(item: PackingListNodeDto)
+
+    @Query("UPDATE packingitems SET ordinal = :ordinal WHERE id=:itemId")
+    suspend fun updatePackingItemOrdinal(itemId: Long, ordinal: Int)
 
     @Insert
-    suspend fun addPackingItem(item: PackingListItemDto)
+    suspend fun addPackingItem(item: PackingListNodeDto)
 
     @Delete
-    suspend fun deletePackingItem(item: PackingListItemDto)
+    suspend fun deletePackingItem(item: PackingListNodeDto)
 
     @Query("SELECT * FROM events ORDER BY dateTime DESC")
     fun getEvents(): Flow<List<EventDto>>

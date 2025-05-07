@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,37 +12,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.CustomAccessibilityAction
-import androidx.compose.ui.semantics.customActions
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -59,6 +49,15 @@ fun Headline(text: String, modifier: Modifier = Modifier) {
         text,
         modifier,
         style = MaterialTheme.typography.headlineSmall
+    )
+}
+
+@Composable
+fun Title(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text,
+        modifier,
+        style = MaterialTheme.typography.titleSmall
     )
 }
 
@@ -82,7 +81,7 @@ fun BodyText(text: String, modifier: Modifier = Modifier, maxLines: Int = Int.MA
 }
 
 @Composable
-fun Icon(@DrawableRes iconRes: Int, modifier: Modifier = Modifier) {
+fun ResourceIcon(@DrawableRes iconRes: Int, modifier: Modifier = Modifier) {
     Icon(
         imageVector = ImageVector.vectorResource(id = iconRes), contentDescription = null, modifier
     )
@@ -95,14 +94,14 @@ fun TextIcon(text: String, @DrawableRes iconRes: Int, modifier: Modifier = Modif
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        Icon(iconRes, Modifier.size(24.dp))
+        ResourceIcon(iconRes, Modifier.size(24.dp))
         BodyText(text)
     }
 }
 
 @Composable
 fun Checkbox(isChecked: Boolean, modifier: Modifier = Modifier) {
-    Icon(
+    ResourceIcon(
         if (isChecked) R.drawable.ic_checkbox else R.drawable.ic_checkbox_blank,
         modifier = modifier
     )
@@ -115,7 +114,7 @@ fun ImageButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Icon(
+    ResourceIcon(
         iconRes = iconRes,
         modifier
             .size(size)
@@ -211,3 +210,52 @@ fun Loader(modifier: Modifier = Modifier) {
     )
 }
 
+@Composable
+fun Chip(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = true,
+    onSelectionChanged: () -> Unit = {},
+    content: @Composable () -> Unit,
+) {
+    Surface(
+        modifier = Modifier.padding(4.dp).then(modifier),
+        tonalElevation = 8.dp,
+        shape = MaterialTheme.shapes.medium,
+        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerLow
+    ) {
+        Row(modifier = Modifier
+            .toggleable(
+                value = isSelected,
+                onValueChange = {
+                    onSelectionChanged()
+                }
+            )
+        ) {
+            content()
+        }
+    }
+}
+
+
+@Composable
+fun<T> ChipGroup(
+    modifier: Modifier = Modifier,
+    items: List<T> = listOf(),
+    selectedItemIndex: Int = 0,
+    onSelectedChanged: (T) -> Unit = {},
+    content: @Composable (T) -> Unit = {},
+) {
+    Column(modifier = Modifier.padding(8.dp).then(modifier)) {
+        LazyRow {
+            itemsIndexed(items) { index, item ->
+                Chip(
+                    content =  { content(item) },
+                    isSelected = selectedItemIndex == index,
+                    onSelectionChanged = {
+                        onSelectedChanged(item)
+                    },
+                )
+            }
+        }
+    }
+}

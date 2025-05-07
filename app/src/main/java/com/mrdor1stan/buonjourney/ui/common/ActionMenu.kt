@@ -5,7 +5,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -22,28 +21,32 @@ import com.mrdor1stan.buonjourney.ui.entities.DataState
 data class ActionState<T>(val label: String, val icon: ImageVector, val onClick: (T) -> Unit)
 
 @Composable
-fun<T> ActionMenu(modifier: Modifier = Modifier, item: DataState<T>, actions: List<ActionState<T>>) {
-
-    var expanded by remember { mutableStateOf(false) }
-
+fun <T> ActionMenu(
+    modifier: Modifier = Modifier,
+    item: DataState<T>,
+    actions: List<ActionState<T>>
+) {
+    var isExpanded by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
     ) {
-        IconButton(onClick = { expanded = !expanded }) {
+        IconButton(onClick = { isExpanded = !isExpanded }) {
             Icon(Icons.Default.MoreVert, contentDescription = "Options")
         }
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false }
         ) {
             actions.forEach { action ->
                 DropdownMenuItem(
                     text = { Text(action.label) },
                     leadingIcon = { Icon(action.icon, contentDescription = null) },
-                    onClick = { item.id?.let { itemId -> action.onClick(itemId) } }
+                    onClick = {
+                        item.id?.let { itemId -> action.onClick(itemId) }
+                        isExpanded = false
+                    }
                 )
             }
-            HorizontalDivider()
         }
     }
 

@@ -10,8 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
 import com.mrdor1stan.buonjourney.data.db.CityDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
@@ -81,7 +83,7 @@ fun AddTripScreen(
                     viewModel.updateStatus(it)
                 })
         }
-        PrimaryButton(text = "Add", onClick = {
+        PrimaryButton(text = stringResource(R.string.save_button_label), onClick = {
             scope.launch {
                 viewModel.addTrip()
                 navigateBack()
