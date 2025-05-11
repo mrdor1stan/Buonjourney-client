@@ -18,7 +18,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.updateSentText(intent)
         enableEdgeToEdge()
         setContent {
             BuonjourneyTheme {
@@ -26,8 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .statusBarsPadding()
-                        .imePadding(),
-                    sharedText = viewModel.sharedText
+                        .imePadding()
                 )
             }
         }
@@ -36,7 +34,6 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        viewModel.updateSentText(intent)
     }
 
 

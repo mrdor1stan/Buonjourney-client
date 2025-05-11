@@ -27,14 +27,13 @@ import com.mrdor1stan.buonjourney.ui.screens.event.all.AllEventsScreen
 import com.mrdor1stan.buonjourney.ui.screens.packinglist.details.PackingListDetailsScreen
 
 enum class TripsDetailsScreenTabs {
-    Events, PackingList, Desires
+    Events, PackingList
 }
 
 @Composable
 fun TripsDetailsScreenTabs.titleResId() = when (this) {
     TripsDetailsScreenTabs.Events -> (R.string.schedule_title)
     TripsDetailsScreenTabs.PackingList -> (R.string.packing_list_title)
-    TripsDetailsScreenTabs.Desires -> (R.string.desires_title)
 }
 
 
@@ -77,7 +76,6 @@ fun TripsDetailsScreen(
                             tripId = tripId,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        //  2 -> TripDesiresTab(state.trip?.destination)
                     }
                 }
             }

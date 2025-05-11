@@ -15,15 +15,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
-import com.mrdor1stan.buonjourney.data.db.CityDto
-import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.ui.common.DatePicker
-import com.mrdor1stan.buonjourney.ui.common.Dropdown
 import com.mrdor1stan.buonjourney.ui.common.InputWithLabel
 import com.mrdor1stan.buonjourney.ui.common.PrimaryButton
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTripScreen(
     tripId: Long?,
@@ -67,21 +63,8 @@ fun AddTripScreen(
         PrimaryButton(text = state.endDate?.toShortString?.let { "End date: ${it}" }
             ?: "End start date", onClick = { showEndDatePicker = true }, enabled = true)
 
-        InputWithLabel("Destination") {
-            Dropdown(state.destinations?.joinToString { it.name } ?: "", state.allCities, { it: CityDto -> it.name }, {
-               // viewModel.updateDestination(it)
-            })
-        }
         InputWithLabel("Title") {
             TextField(state.title, onValueChange = viewModel::updateTitle)
-        }
-        InputWithLabel("Status") {
-            Dropdown(state.status.name,
-                TripDto.TripStatus.entries,
-                { it: TripDto.TripStatus -> it.name },
-                {
-                    viewModel.updateStatus(it)
-                })
         }
         PrimaryButton(text = stringResource(R.string.save_button_label), onClick = {
             scope.launch {

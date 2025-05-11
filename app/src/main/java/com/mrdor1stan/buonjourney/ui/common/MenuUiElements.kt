@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,19 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.formatString
 import com.mrdor1stan.buonjourney.common.extentions.toShortString
-import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
-import com.mrdor1stan.buonjourney.data.db.TripDto
-import com.mrdor1stan.buonjourney.ui.entities.CityState
 import com.mrdor1stan.buonjourney.ui.entities.EventState
 import com.mrdor1stan.buonjourney.ui.entities.TripState
 import java.time.LocalDateTime
 
-fun<T> getDefaultActions() = listOf<ActionState<T>>(
+fun <T> getDefaultActions() = listOf<ActionState<T>>(
     ActionState(label = "delete_button", icon = Icons.Outlined.Delete, onClick = {}),
     ActionState(label = "edit_button", icon = Icons.Outlined.Edit, onClick = {}),
 )
@@ -46,8 +43,6 @@ fun TripElement(
             LocalDateTime.now(),
             LocalDateTime.now().plusDays(7),
             "Mega trip",
-            listOf(CityState("Kyiv", country = "Ukraine")),
-            TripDto.TripStatus.PLANNED,
             packingList = listOf(),
             events = listOf(),
         ), modifier: Modifier = Modifier.padding(16.dp),
@@ -70,51 +65,15 @@ fun TripElement(
 
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Headline(text = state.title)
-                TextIcon(
-                    text = state.destinations.joinToString { it.name },
-                    iconRes = R.drawable.ic_globe
-                )
-
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     TextIcon(state.events.size.toString(), R.drawable.ic_event)
                 }
             }
-
-            Column(Modifier.width(IntrinsicSize.Min)) {
-                BodyText(text = state.startDate.toShortString)
-                HorizontalDivider()
-                BodyText(text = state.endDate.toShortString)
-            }
         }
 
         ActionMenu(actions = actions, item = state)
     }
 }
-
-
-@Preview
-@Composable
-fun CityElement(
-    state: CityState =
-        CityState("Kyiv", "Ukraine"),
-    modifier: Modifier = Modifier.padding(16.dp),
-    actions: List<ActionState<String>> = getDefaultActions()
-) {
-    Row(
-        modifier, horizontalArrangement = Arrangement.spacedBy(
-            dimensionResource(
-                id = R.dimen.middle_margin
-            )
-        )
-    ) {
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Headline(text = state.name)
-            Description(text = state.country)
-        }
-        ActionMenu(actions = actions, item = state)
-    }
-}
-
 
 @Preview
 @Composable
@@ -165,6 +124,25 @@ fun EventsList(
                 EventElement(it)
                 if (!isStartOfGroup) HorizontalDivider()
             }
+        }
+    }
+}
+
+
+@Composable
+fun getDateRangeUi(from: LocalDateTime?, to: LocalDateTime?, modifier: Modifier = Modifier) {
+    Column(
+        Modifier
+            .width(IntrinsicSize.Min)
+            .then(modifier)
+    ) {
+        from?.let {
+            BodyText(text = stringResource(id = R.string.from_date, from.toShortString))
+        }
+        if (from != null && to != null)
+            HorizontalDivider()
+        to?.let {
+            BodyText(text = stringResource(id = R.string.to_date, to.toShortString))
         }
     }
 }

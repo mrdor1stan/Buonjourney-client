@@ -4,7 +4,6 @@ import androidx.room.Transaction
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
 import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
-import com.mrdor1stan.buonjourney.data.db.CityDto
 import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.data.db.TripsDetailsDto
@@ -42,18 +41,6 @@ class DatabaseRepository(
     suspend fun deleteTicket(ticket: TicketDto) = dao.deleteTicket(ticket)
 
     suspend fun deleteTicket(id: Long) = dao.deleteTicket(id)
-
-    suspend fun addCity(place: CityDto) = dao.addCity(place)
-
-    fun getCities(): Flow<List<CityDto>> = dao.getCities()
-
-    fun getCity(id: String): Flow<CityDto> = dao.getCity(id)
-
-    suspend fun deleteCity(place: CityDto) = dao.deleteCity(place)
-
-    suspend fun deleteCity(id: String) = dao.deleteCity(id)
-
-    suspend fun updateCity(city: CityDto) = dao.updateCity(city)
 
     suspend fun updatePackingItem(item: PackingListNodeDto) = dao.updatePackingItem(item)
 

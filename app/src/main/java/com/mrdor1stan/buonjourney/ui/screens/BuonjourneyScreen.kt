@@ -13,11 +13,11 @@ import com.mrdor1stan.buonjourney.ui.screens.splash.SplashScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BuonjourneyScreen(viewModel: BuonjourneyScreenViewModel = viewModel(factory = BuonjourneyScreenViewModel.Factory), modifier: Modifier = Modifier, sharedText: String?) {
+fun BuonjourneyScreen(viewModel: BuonjourneyScreenViewModel = viewModel(factory = BuonjourneyScreenViewModel.Factory), modifier: Modifier = Modifier) {
     val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsState()
 
     when (isUserLoggedIn) {
-        true -> MainScreen(modifier = modifier, placeLink = sharedText)
+        true -> MainScreen(modifier = modifier)
         false -> LoginScreen(modifier = modifier.safeContentPadding())
         null -> SplashScreen(modifier)
     }

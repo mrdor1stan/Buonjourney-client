@@ -5,9 +5,6 @@
     <string name="save_button_label">Save</string>
     <string name="schedule_title">Schedule</string>
     <string name="packing_list_title">Packing list</string>
-    <string name="desires_title">Desires</string>
-    <string name="city">City</string>
-    <string name="attraction">Attraction</string>
     <string name="add_list_item_button">Add as list item</string>
     <string name="add_category_button">Add as category</string>
     <string name="check_mode">Check mode</string>
@@ -19,4 +16,6 @@
     <string name="remove_item">Remove item</string>
     <string name="cancel_button_label">Cancel</string>
     <string name="enter_new_name">Enter new name</string>
+    <string name="from_date">From %1$s</string>
+    <string name="to_date">To %1$s</string>
 </resources>

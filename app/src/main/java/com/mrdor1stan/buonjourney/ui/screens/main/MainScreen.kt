@@ -34,18 +34,14 @@ import com.mrdor1stan.buonjourney.ui.common.Headline
 import com.mrdor1stan.buonjourney.ui.common.ImageButton
 import com.mrdor1stan.buonjourney.ui.entities.AddEvent
 import com.mrdor1stan.buonjourney.ui.entities.AddTrip
-import com.mrdor1stan.buonjourney.ui.entities.AddWishlistCity
 import com.mrdor1stan.buonjourney.ui.entities.AllEvents
 import com.mrdor1stan.buonjourney.ui.entities.AllTickets
 import com.mrdor1stan.buonjourney.ui.entities.AllTrips
-import com.mrdor1stan.buonjourney.ui.entities.AllWishlistCities
 import com.mrdor1stan.buonjourney.ui.entities.MainMenu
 import com.mrdor1stan.buonjourney.ui.entities.Profile
 import com.mrdor1stan.buonjourney.ui.entities.TopLevelRoute
 import com.mrdor1stan.buonjourney.ui.entities.TripDetails
 import com.mrdor1stan.buonjourney.ui.screens.event.newone.AddEventScreen
-import com.mrdor1stan.buonjourney.ui.screens.places.all.AllCitiesScreen
-import com.mrdor1stan.buonjourney.ui.screens.places.newone.AddCityScreen
 import com.mrdor1stan.buonjourney.ui.screens.profile.ProfileScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.details.TripsDetailsScreen
@@ -55,19 +51,15 @@ private const val TAG = "MainScreen"
 
 val TOP_LEVEL_ROUTES = listOf(
     TopLevelRoute(name = "Trips", route = AllTrips, icon = Icons.Default.Flight),
-    TopLevelRoute(name = "Home", route = MainMenu, icon = Icons.Default.Home),
-    TopLevelRoute(name = "Desires", route = AllWishlistCities, icon = Icons.Default.Place)
+    TopLevelRoute(name = "Home", route = MainMenu, icon = Icons.Default.Home)
 )
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, placeLink: String?) {
+fun MainScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val startDestination = MainMenu
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
-    if (placeLink != null)
-        navController.navigate(AddWishlistCity(placeLink = placeLink, id = null))
 
     Scaffold(
         modifier = modifier,
@@ -147,31 +139,6 @@ fun MainScreen(modifier: Modifier = Modifier, placeLink: String?) {
 
             composable<Profile> {
                 ProfileScreen(modifier = Modifier.fillMaxSize())
-            }
-
-            composable<AllWishlistCities> {
-                AllCitiesScreen(navigateToAddScreen = {
-                    navController.navigate(
-                        AddWishlistCity(
-                            null,
-                            it
-                        )
-                    )
-                },
-                    navigateToItem = { navController.navigate(TripDetails(it)) })
-            }
-
-            composable<AddWishlistCity> {
-                val placeLink = it.toRoute<AddWishlistCity>().placeLink
-                val cityId = it.toRoute<AddWishlistCity>().id
-                Log.d("AddCityNavigationRoute", "cityId: $cityId")
-                AddCityScreen(
-                    placeLink = placeLink,
-                    cityId = cityId,
-                    modifier = Modifier.fillMaxSize(),
-                    navigateBack = {
-                        navController.navigateUp()
-                    })
             }
 
             composable<TripDetails> {

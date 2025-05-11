@@ -13,17 +13,11 @@ import java.util.UUID
 data class TripDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
     val title: String,
-    val status: TripStatus,
-) {
-    enum class TripStatus {
-        PLANNED,
-        ONGOING,
-        COMPLETED,
-    }
-}
+    val startDate: LocalDateTime?,
+    val endDate: LocalDateTime?,
+    val description: String?
+)
 
 @Entity(tableName = "tickets")
 data class TicketDto(
@@ -35,58 +29,6 @@ data class TicketDto(
     val isUsed: Boolean,
     val tripId: Long,
 )
-
-@Entity(tableName = "cities")
-data class CityDto(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val country: String
-)
-
-
-@Entity(
-    primaryKeys = ["cityId", "tripId"],
-    foreignKeys = [ForeignKey(
-        entity = TripDto::class,
-        parentColumns = ["id"],
-        childColumns = ["tripId"],
-    ),
-        ForeignKey(
-            entity = CityDto::class,
-            parentColumns = ["id"],
-            childColumns = ["cityId"],
-        )]
-)
-data class TripCityCrossRef(
-    val cityId: String,
-    val tripId: Long
-)
-
-
-@Entity(
-    tableName = "attractions",
-    foreignKeys = [ForeignKey(
-        entity = CityDto::class,
-        parentColumns = ["id"],
-        childColumns = ["cityId"],
-        onDelete = CASCADE
-    )]
-)
-data class AttractionDto(
-    @PrimaryKey val id: String,
-    val name: String,
-    val cityId: String,
-    val description: String?,
-    val latitude: Double?,
-    val longitude: Double?,
-    val source: SourceType
-) {
-    enum class SourceType {
-        MANUAL,
-        GOOGLE_LINK,
-        GOOGLE_API
-    }
-}
 
 @Entity(
     tableName = "packingitems",

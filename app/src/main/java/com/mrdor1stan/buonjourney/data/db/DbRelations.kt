@@ -15,16 +15,6 @@ data class TripsDetailsDto(
         parentColumn = "id",
         entityColumn = "tripId",
     )
-    val packingItems: List<PackingListNodeDto>,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction(
-            TripCityCrossRef::class,
-            parentColumn = "tripId",
-            entityColumn = "cityId"
-        )
-    )
-    val cities: List<CityDto>
+    val packingItems: List<PackingListNodeDto>
 )
 

@@ -30,9 +30,6 @@ data class AllEvents(val tripId: Long?)
 data class EventDetails(val id: Long)
 
 @Serializable
-data class WishlistCityDetails(val id: Long)
-
-@Serializable
 object AddTicket
 
 @Serializable
@@ -40,9 +37,3 @@ class AddEvent(val tripId: Long, val eventId: Long?)
 
 @Serializable
 object Profile
-
-@Serializable
-object AllWishlistCities
-
-@Serializable
-data class AddWishlistCity(val placeLink: String?, val id: String?)
