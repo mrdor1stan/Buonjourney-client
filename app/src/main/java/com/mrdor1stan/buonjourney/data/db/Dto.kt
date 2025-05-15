@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Entity(
     tableName = "trips"
@@ -64,16 +63,35 @@ data class EventDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val title: String,
-    val dateTime: LocalDateTime,
     val description: String,
     val address: String,
     val tripId: Long,
-    val eventType: EventType = EventType.NO_TYPE
+    val payload: Payload
 ) {
-    enum class EventType {
-        TRANSPORT,
-        ENTERTAINMENT,
-        ACCOMMODATION,
-        NO_TYPE,
+    sealed class Payload(val type: Type) {
+        data class TransportData(
+            val startDateTime: Long,
+            val endDateTime: Long
+        ) : Payload(Type.Transport)
+
+        data object NoData : Payload(Type.NoType)
+
+        data class EntertainmentData(
+            val startDateTime: Long,
+            val endDateTime: Long
+        ) : Payload(Type.Entertainment)
+
+        data class AccommodationData(
+            val checkInStart: Long,
+            val checkInEnd: Long,
+            val checkOutStart: Long,
+            val checkOutEnd: Long,
+            val checkInDate: Long,
+            val checkOutDate: Long
+        ) : Payload(Type.Accommodation)
+    }
+
+    enum class Type {
+        Accommodation, Transport, Entertainment, NoType
     }
 }

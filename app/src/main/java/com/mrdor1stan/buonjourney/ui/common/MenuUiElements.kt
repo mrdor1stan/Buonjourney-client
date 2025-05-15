@@ -34,19 +34,12 @@ fun <T> getDefaultActions() = listOf<ActionState<T>>(
 )
 
 
-@OptIn(ExperimentalLayoutApi::class)
-@Preview
+
 @Composable
 fun TripElement(
-    state: TripState =
-        TripState(
-            LocalDateTime.now(),
-            LocalDateTime.now().plusDays(7),
-            "Mega trip",
-            packingList = listOf(),
-            events = listOf(),
-        ), modifier: Modifier = Modifier.padding(16.dp),
-    actions: List<ActionState<Long>> = getDefaultActions()
+    state: TripState,
+    modifier: Modifier = Modifier,
+    actions: List<ActionState<Long>>
 ) {
     Row(
         modifier, horizontalArrangement = Arrangement.spacedBy(
@@ -64,40 +57,39 @@ fun TripElement(
         ) {
 
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Headline(text = state.title)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    TextIcon(state.events.size.toString(), R.drawable.ic_event)
-                }
+                Title(text = state.title)
+                state.description?.let { Description(text = it) }
             }
+            TripDateRange(state.startDate, state.endDate)
         }
 
         ActionMenu(actions = actions, item = state)
     }
 }
 
-@Preview
-@Composable
-fun EventElement(
-    state: EventState =
-        EventState(
-            "Visiting museum",
-            LocalDateTime.now(),
-            "Can't wait to finally see Mona Lisa",
-            address = "Louvre, Paris, France"
-        ),
-    modifier: Modifier = Modifier.padding(16.dp)
-) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Headline(text = state.title)
-        state.description.takeIf { it.isNotEmpty() }?.let {
-            Description(text = state.description)
-        }
-        TextIcon(text = state.dateTime.formatString, iconRes = R.drawable.ic_calendar)
-        state.address.takeIf { it.isNotEmpty() }?.let {
-            TextIcon(text = state.address, iconRes = R.drawable.ic_place)
-        }
-    }
-}
+//@Preview
+//@Composable
+//fun EventElement(
+//    state: EventState =
+//        EventState(
+//            "Visiting museum",
+//            LocalDateTime.now(),
+//            "Can't wait to finally see Mona Lisa",
+//            address = "Louvre, Paris, France"
+//        ),
+//    modifier: Modifier = Modifier.padding(16.dp)
+//) {
+//    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+//        Headline(text = state.title)
+//        state.description.takeIf { it.isNotEmpty() }?.let {
+//            Description(text = state.description)
+//        }
+//        TextIcon(text = state.dateTime.formatString, iconRes = R.drawable.ic_calendar)
+//        state.address.takeIf { it.isNotEmpty() }?.let {
+//            TextIcon(text = state.address, iconRes = R.drawable.ic_place)
+//        }
+//    }
+//}
 
 @Composable
 fun EventsList(
@@ -114,14 +106,14 @@ fun EventsList(
         }
         itemsIndexed(items = events) { index, item ->
             val isStartOfGroup =
-                index == 0 || item.dateTime.toShortString != events[index - 1].dateTime.toShortString
+                index == 0 // || item.dateTime.toShortString != events[index - 1].dateTime.toShortString
             item.let {
                 if (isStartOfGroup) {
-                    Headline(
-                        text = it.dateTime.toShortString
-                    )
+//                    Headline(
+//                        text = it.dateTime.toShortString
+//                    )
                 }
-                EventElement(it)
+                //EventElement(it)
                 if (!isStartOfGroup) HorizontalDivider()
             }
         }
@@ -130,11 +122,10 @@ fun EventsList(
 
 
 @Composable
-fun getDateRangeUi(from: LocalDateTime?, to: LocalDateTime?, modifier: Modifier = Modifier) {
-    Column(
-        Modifier
-            .width(IntrinsicSize.Min)
-            .then(modifier)
+fun TripDateRange(from: LocalDateTime?, to: LocalDateTime?, modifier: Modifier = Modifier) {
+    Column(Modifier.width(IntrinsicSize.Max).then(modifier),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         from?.let {
             BodyText(text = stringResource(id = R.string.from_date, from.toShortString))

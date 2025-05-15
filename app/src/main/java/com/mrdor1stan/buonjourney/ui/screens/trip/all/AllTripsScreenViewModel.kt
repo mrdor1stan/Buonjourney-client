@@ -32,7 +32,6 @@ class AllTripsScreenViewModel(
         viewModelScope.launch {
             databaseRepository.getTrips().collect { trips ->
                 _uiState.value = uiState.value.copy(results = trips.map(TripsDetailsDto::map))
-
             }
         }
     }

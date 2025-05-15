@@ -2,12 +2,8 @@ package com.mrdor1stan.buonjourney.ui.screens.trip.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -18,11 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.R
-import com.mrdor1stan.buonjourney.ui.common.EventElement
-import com.mrdor1stan.buonjourney.ui.common.Headline
 import com.mrdor1stan.buonjourney.ui.common.Loader
 import com.mrdor1stan.buonjourney.ui.common.Title
-import com.mrdor1stan.buonjourney.ui.entities.EventState
 import com.mrdor1stan.buonjourney.ui.screens.event.all.AllEventsScreen
 import com.mrdor1stan.buonjourney.ui.screens.packinglist.details.PackingListDetailsScreen
 
@@ -71,7 +64,10 @@ fun TripsDetailsScreen(
                 }
                 state.trip?.id?.let { tripId ->
                     when (tabIndex) {
-                        0 -> AllEventsScreen(tripId = tripId, navigateToAddScreen = { navigateToAddEventScreen(it) })
+                        0 -> AllEventsScreen(
+                            tripId = tripId,
+                            navigateToAddScreen = { navigateToAddEventScreen(it) })
+
                         1 -> PackingListDetailsScreen(
                             tripId = tripId,
                             modifier = Modifier.fillMaxWidth()

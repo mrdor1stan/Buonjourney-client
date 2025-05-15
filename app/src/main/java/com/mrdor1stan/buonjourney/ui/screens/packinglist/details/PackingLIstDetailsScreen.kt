@@ -39,8 +39,8 @@ import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
 import com.mrdor1stan.buonjourney.ui.common.BodyText
 import com.mrdor1stan.buonjourney.ui.common.ChipGroup
-import com.mrdor1stan.buonjourney.ui.common.Headline
 import com.mrdor1stan.buonjourney.ui.common.Loader
+import com.mrdor1stan.buonjourney.ui.common.Title
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,8 +67,21 @@ fun PackingListDetailsScreen(
     when (val list = state.packingList) {
         null -> Loader(modifier)
         else -> Column(modifier) {
-            Row {
-                TextField(value = state.input, onValueChange = viewModel::updateInput)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(
+                        horizontal =
+                        dimensionResource(id = R.dimen.middle_margin)
+                    )
+                    .padding(top = dimensionResource(id = R.dimen.small_margin))
+            ) {
+                TextField(
+                    value = state.input,
+                    onValueChange = viewModel::updateInput,
+                    modifier = Modifier.weight(1f),
+                    placeholder = {Text("Enter item or category")}
+                )
                 IconButton(
                     onClick = {
                         scope.launch {
@@ -304,8 +317,10 @@ private fun PackingListItem(
 
 @Composable
 private fun PackingListItemText(state: PackingListNodeDto, modifier: Modifier = Modifier) {
+
+
     when (state.nodeType) {
         PackingListNodeDto.Type.ListItem -> BodyText(text = state.name, modifier = modifier)
-        PackingListNodeDto.Type.Header -> Headline(text = state.name, modifier = modifier)
+        PackingListNodeDto.Type.Header -> Title(text = state.name, modifier = modifier)
     }
 }

@@ -16,6 +16,8 @@ class DatabaseRepository(
 
     suspend fun addTrip(trip: TripDto) = dao.addTrip(trip)
 
+    suspend fun updateTrip(trip: TripDto) = dao.updateTrip(trip)
+
     fun getTrips(): Flow<List<TripsDetailsDto>> = dao.getTrips()
 
     fun getTrip(id: Long): Flow<TripsDetailsDto> = dao.getTrip(id)

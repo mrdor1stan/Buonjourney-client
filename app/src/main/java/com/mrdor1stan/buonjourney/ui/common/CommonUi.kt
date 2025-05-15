@@ -1,26 +1,36 @@
 package com.mrdor1stan.buonjourney.ui.common
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,15 +43,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.dateFromMillis
 import com.mrdor1stan.buonjourney.common.extentions.millis
 import java.time.LocalDateTime
-
 
 @Composable
 fun Headline(text: String, modifier: Modifier = Modifier) {
@@ -57,7 +68,8 @@ fun Title(text: String, modifier: Modifier = Modifier) {
     Text(
         text,
         modifier,
-        style = MaterialTheme.typography.titleSmall
+        style = MaterialTheme.typography.titleMedium,
+        maxLines = 2
     )
 }
 
@@ -66,7 +78,8 @@ fun Description(text: String, modifier: Modifier = Modifier) {
     Text(
         text,
         modifier,
-        style = MaterialTheme.typography.bodyMedium.merge(fontStyle = FontStyle.Italic)
+        style = MaterialTheme.typography.bodyMedium.merge(fontStyle = FontStyle.Italic),
+        maxLines = 3
     )
 }
 
@@ -75,7 +88,7 @@ fun BodyText(text: String, modifier: Modifier = Modifier, maxLines: Int = Int.MA
     Text(
         text,
         modifier,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyMedium.merge(),
         maxLines = maxLines
     )
 }
@@ -100,35 +113,17 @@ fun TextIcon(text: String, @DrawableRes iconRes: Int, modifier: Modifier = Modif
 }
 
 @Composable
-fun Checkbox(isChecked: Boolean, modifier: Modifier = Modifier) {
-    ResourceIcon(
-        if (isChecked) R.drawable.ic_checkbox else R.drawable.ic_checkbox_blank,
-        modifier = modifier
-    )
-}
-
-@Composable
-fun ImageButton(
-    iconRes: Int,
-    size: Dp = 36.dp,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ResourceIcon(
-        iconRes = iconRes,
-        modifier
-            .size(size)
-            .clickable(onClick = onClick)
-    )
-}
-
-@Composable
 fun ListHeader(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)?) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Headline(text = text, modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(16.dp))
         onClick?.let {
-            ImageButton(iconRes = R.drawable.ic_add, onClick = onClick)
+            IconButton(onClick = onClick) {
+                Image(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(id = R.string.add_label)
+                )
+            }
         }
     }
 }
@@ -162,13 +157,13 @@ fun DatePicker(
         }
     }
     DatePickerDialog(
+        modifier = modifier,
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
                     val date =
                         datePickerState.selectedDateMillis?.let { onSuccess(it.dateFromMillis) }
-
                 },
                 enabled = confirmEnabled.value
             ) {
@@ -181,25 +176,71 @@ fun DatePicker(
 }
 
 @Composable
-fun PrimaryButton(text: String, onClick: () -> Unit, enabled: Boolean) {
-    Button(onClick = onClick, Modifier.height(48.dp), enabled = enabled) {
-        BodyText(text = text)
+fun PrimaryButton(text: String, onClick: () -> Unit, enabled: Boolean, modifier: Modifier = Modifier) {
+    Button(onClick = onClick, Modifier.heightIn(min = 60.dp).then(modifier), enabled = enabled) {
+        Headline(text = text)
     }
 }
+
 
 @Composable
-fun InputWithLabel(
+fun DateInputField(
+    value: String,
     label: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    showDatePicker: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        BodyText(text = label)
-        content()
-    }
+    OutlinedTextField(
+        value = value,
+        onValueChange = {},
+        readOnly = true,
+        label = { Text(label) },
+        placeholder = { Text("MM/DD/YYYY") },
+        trailingIcon = {
+            Icon(Icons.Default.DateRange, contentDescription = "Select date")
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(value) {
+                awaitEachGesture {
+                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    waitForUpOrCancellation(pass = PointerEventPass.Initial)?.let {
+                        showDatePicker()
+                    }
+                }
+            }
+    )
 }
 
 
+@Composable
+fun TimeInputField(
+    value: String,
+    label: String,
+    showTimePicker: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = {},
+        readOnly = true,
+        label = { Text(label) },
+        placeholder = { Text("HH:MM") },
+        trailingIcon = {
+            Icon(Icons.Default.AccessTime, contentDescription = "Select time")
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .pointerInput(value) {
+                awaitEachGesture {
+                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    waitForUpOrCancellation(pass = PointerEventPass.Initial)?.let {
+                        showTimePicker()
+                    }
+                }
+            }
+    )
+}
 
 @Composable
 fun Loader(modifier: Modifier = Modifier) {
@@ -218,7 +259,9 @@ fun Chip(
     content: @Composable () -> Unit,
 ) {
     Surface(
-        modifier = Modifier.padding(4.dp).then(modifier),
+        modifier = Modifier
+            .padding(4.dp)
+            .then(modifier),
         tonalElevation = 8.dp,
         shape = MaterialTheme.shapes.medium,
         color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerLow
@@ -238,18 +281,22 @@ fun Chip(
 
 
 @Composable
-fun<T> ChipGroup(
+fun <T> ChipGroup(
     modifier: Modifier = Modifier,
     items: List<T> = listOf(),
     selectedItemIndex: Int = 0,
     onSelectedChanged: (T) -> Unit = {},
     content: @Composable (T) -> Unit = {},
 ) {
-    Column(modifier = Modifier.padding(8.dp).then(modifier)) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .then(modifier)
+    ) {
         LazyRow {
             itemsIndexed(items) { index, item ->
                 Chip(
-                    content =  { content(item) },
+                    content = { content(item) },
                     isSelected = selectedItemIndex == index,
                     onSelectionChanged = {
                         onSelectedChanged(item)

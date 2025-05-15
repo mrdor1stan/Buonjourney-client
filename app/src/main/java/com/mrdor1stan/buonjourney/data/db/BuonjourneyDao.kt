@@ -14,6 +14,9 @@ interface BuonjourneyDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTrip(trip: TripDto)
 
+    @Update
+    suspend fun updateTrip(trip: TripDto)
+
     @Transaction
     @Query("SELECT * FROM trips")
     fun getTrips(): Flow<List<TripsDetailsDto>>
@@ -57,10 +60,10 @@ interface BuonjourneyDao {
     @Delete
     suspend fun deletePackingItem(item: PackingListNodeDto)
 
-    @Query("SELECT * FROM events ORDER BY dateTime DESC")
+    @Query("SELECT * FROM events")
     fun getEvents(): Flow<List<EventDto>>
 
-    @Query("SELECT * FROM events WHERE tripId=:tripId ORDER BY dateTime DESC")
+    @Query("SELECT * FROM events WHERE tripId=:tripId")
     fun getEventsByTrip(tripId: Long): Flow<List<EventDto>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

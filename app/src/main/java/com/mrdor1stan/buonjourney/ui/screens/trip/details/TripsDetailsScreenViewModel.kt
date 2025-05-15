@@ -1,19 +1,24 @@
 package com.mrdor1stan.buonjourney.ui.screens.trip.details
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
+import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.ui.entities.TripState
 import com.mrdor1stan.buonjourney.ui.entities.map
-import com.mrdor1stan.buonjourney.ui.screens.packinglist.details.PackingListDetailsScreenUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+private const val TAG = "TripsDetailsScreenViewModel"
 
 data class TripsDetailsScreenUiState(
     val trip: TripState?

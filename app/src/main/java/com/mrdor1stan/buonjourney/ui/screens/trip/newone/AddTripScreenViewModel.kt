@@ -18,6 +18,7 @@ data class AddTripScreenUiState(
     val startDate: LocalDateTime?,
     val endDate: LocalDateTime?,
     val title: String,
+    val description: String?,
     val isAddButtonEnabled: Boolean
 )
 
@@ -29,7 +30,7 @@ class AddTripScreenViewModel(
     private val _uiState: MutableStateFlow<AddTripScreenUiState> =
         MutableStateFlow(
             AddTripScreenUiState(
-                null, null, "",false
+                null, null, "", null, false
             )
         )
 
@@ -40,7 +41,9 @@ class AddTripScreenViewModel(
                     _uiState.value = uiState.value.copy(
                         startDate = it.trip.startDate,
                         endDate = it.trip.endDate,
-                        title = it.trip.title
+                        title = it.trip.title,
+                        description = it.trip.description,
+                        isAddButtonEnabled = true
                     )
                 }
             }
@@ -65,27 +68,35 @@ class AddTripScreenViewModel(
         validateAddButton()
     }
 
+    fun updateDescription(value: String) {
+        _uiState.value = uiState.value.copy(description = value.takeIf { it.isNotEmpty() })
+        validateAddButton()
+    }
+
     private fun validateAddButton() {
         _uiState.value = uiState.value.copy(
             isAddButtonEnabled =
             uiState.value.run {
-                startDate != null && endDate != null && startDate < endDate && title.isNotEmpty()
+                title.isNotEmpty()
             }
         )
     }
 
-    suspend fun addTrip() {
-        databaseRepository.addTrip(
-            with(uiState.value) {
-                TripDto(
-                    startDate = startDate,
-                    endDate = endDate,
-                    title = title,
-                    //TODO: add description field
-                    description = null
-                )
-            }
-        )
+    suspend fun saveTrip() {
+        val tripDto = with(uiState.value) {
+            TripDto(
+                startDate = startDate,
+                endDate = endDate,
+                title = title,
+                description = description
+            )
+        }
+
+        tripId?.let {
+            databaseRepository.updateTrip(
+                tripDto.copy(id = it)
+            )
+        } ?: databaseRepository.addTrip(tripDto)
     }
 
     companion object {

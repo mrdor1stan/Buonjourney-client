@@ -1,6 +1,6 @@
 package com.mrdor1stan.buonjourney.ui.screens.main
 
-import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Place
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -20,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -31,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.ui.common.Headline
-import com.mrdor1stan.buonjourney.ui.common.ImageButton
 import com.mrdor1stan.buonjourney.ui.entities.AddEvent
 import com.mrdor1stan.buonjourney.ui.entities.AddTrip
 import com.mrdor1stan.buonjourney.ui.entities.AllEvents
@@ -100,8 +102,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        ImageButton(iconRes = R.drawable.ic_back,
-                            onClick = { navController.navigateUp() })
+                        IconButton(
+                            onClick = { navController.navigateUp() }) {
+                            Image(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(
+                                    id = R.string.back_label
+                                )
+                            )
+                        }
 
                     }
                     HorizontalDivider()

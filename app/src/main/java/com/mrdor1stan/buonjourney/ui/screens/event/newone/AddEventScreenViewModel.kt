@@ -15,11 +15,10 @@ import java.time.LocalDateTime
 data class AddEventScreenUiState(
     val title: String,
     val description: String,
+    val eventType: EventDto.Type,
     val address: String,
-    val dateTime: LocalDateTime?,
     val isAddButtonEnabled: Boolean
 )
-
 
 class AddEventScreenViewModel(
     private val tripId: Long,
@@ -27,20 +26,21 @@ class AddEventScreenViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         AddEventScreenUiState(
-            "", "", "", null, false
+            "", "", EventDto.Type.NoType,"", false
         )
     )
     val uiState = _uiState.asStateFlow()
-
-    fun updateDate(date: LocalDateTime) {
-        _uiState.value = uiState.value.copy(dateTime = date)
-        validateAddButton()
-    }
 
     fun updateTitle(value: String) {
         _uiState.value = uiState.value.copy(title = value)
         validateAddButton()
     }
+
+    fun updateEventType(type: EventDto.Type) {
+        _uiState.value = uiState.value.copy(eventType = type)
+        validateAddButton()
+    }
+
 
     fun updateDescription(value: String) {
         _uiState.value = uiState.value.copy(description = value)
@@ -56,7 +56,7 @@ class AddEventScreenViewModel(
         _uiState.value = uiState.value.copy(
             isAddButtonEnabled =
             uiState.value.run {
-                dateTime != null && title.isNotEmpty()
+               title.isNotEmpty()
             }
         )
     }
@@ -65,7 +65,7 @@ class AddEventScreenViewModel(
         databaseRepository.addEvent(
             with(uiState.value) {
                 EventDto(
-                    dateTime = dateTime!!,
+                    payload = EventDto.Payload.NoData,
                     title = title,
                     description = description,
                     address = address,

@@ -8,7 +8,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
+import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.ui.entities.EventState
+import com.mrdor1stan.buonjourney.ui.entities.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -36,15 +38,7 @@ class AllEventsScreenViewModel(
             ).collect { events ->
                 _uiState.value =
                     uiState.value.copy(
-                        results =
-                            events.map {
-                                EventState(
-                                    title = it.title,
-                                    dateTime = it.dateTime,
-                                    description = it.description,
-                                    address = it.address,
-                                )
-                            },
+                        results = events.map {it.map()},
                     )
             }
         }

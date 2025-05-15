@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.TextField
@@ -52,7 +54,7 @@ fun ProfileScreen(
         ) {
             Headline(text = state.name)
             Image(
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_profile),
+                imageVector = Icons.Default.Person,
                 contentDescription = null,
                 modifier = Modifier.size(160.dp)
             )

@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.material.icons)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.text.google.fonts)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
