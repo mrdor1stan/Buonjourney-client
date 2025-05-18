@@ -1,7 +1,11 @@
 package com.mrdor1stan.buonjourney.ui.entities
 
+import android.net.Uri
+import android.provider.ContactsContract.Data
+import androidx.core.net.toUri
 import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
+import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripsDetailsDto
 import java.time.LocalDateTime
 
@@ -33,8 +37,30 @@ fun TripsDetailsDto.map() =
 
 data class EventState(
     val title: String,
-    val description: String,
-    val address: String,
+    val description: String?,
+    val address: String?,
+    val payload: EventDto.Payload?,
+    override val id: Long
+): DataState<Long>
+
+fun EventDto.map() = EventState(
+    title = title,
+    description = description,
+    address = address,
+    payload = payload,
+    id = id
 )
 
-fun EventDto.map() = EventState(title = title, description = description, address = address)
+data class TicketState(
+    override val id: Long,
+    val uri: Uri,
+    val mimeType: String?,
+    val displayName: String?
+): DataState<Long>
+
+fun TicketDto.map() = TicketState(
+    id = id,
+    uri = uri.toUri(),
+    mimeType = mimeType,
+    displayName = displayName
+)

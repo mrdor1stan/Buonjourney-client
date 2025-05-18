@@ -2,6 +2,7 @@ package com.mrdor1stan.buonjourney.data
 
 import androidx.room.Transaction
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
+import com.mrdor1stan.buonjourney.data.db.EventDetailsDto
 import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
 import com.mrdor1stan.buonjourney.data.db.TicketDto
@@ -29,6 +30,7 @@ class DatabaseRepository(
     suspend fun addEvent(event: EventDto) = dao.addEvent(event)
 
     fun getEvents(): Flow<List<EventDto>> = dao.getEvents()
+    fun getEvent(eventId: Long): Flow<EventDetailsDto> = dao.getEvent(eventId)
 
     fun getEventsByTrip(tripId: Long): Flow<List<EventDto>> = dao.getEventsByTrip(tripId)
 
@@ -37,6 +39,8 @@ class DatabaseRepository(
     suspend fun deleteEvent(id: Long) = dao.deleteEvent(id)
 
     fun getTickets() = dao.getTickets()
+
+    fun getTicketsByEvent(eventId: Long) = dao.getTicketsByEvent(eventId)
 
     fun getTicket(id: Long) = dao.getTicket(id)
 

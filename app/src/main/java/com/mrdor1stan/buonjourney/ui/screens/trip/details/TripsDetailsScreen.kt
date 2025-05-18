@@ -42,6 +42,7 @@ fun TripsDetailsScreen(
     navigateToEventsListScreen: () -> Unit,
     navigateToAddEventScreen: (eventId: Long?) -> Unit,
     navigateToTicketListScreen: () -> Unit,
+    navigateToEventDetailsScreen: (Long) -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     when (val trip = state.trip) {
@@ -66,7 +67,9 @@ fun TripsDetailsScreen(
                     when (tabIndex) {
                         0 -> AllEventsScreen(
                             tripId = tripId,
-                            navigateToAddScreen = { navigateToAddEventScreen(it) })
+                            navigateToAddScreen = navigateToAddEventScreen,
+                            navigateToItem = navigateToEventDetailsScreen
+                        )
 
                         1 -> PackingListDetailsScreen(
                             tripId = tripId,

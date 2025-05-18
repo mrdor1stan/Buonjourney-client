@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
-import com.mrdor1stan.buonjourney.data.db.EventDto
 import com.mrdor1stan.buonjourney.ui.entities.EventState
 import com.mrdor1stan.buonjourney.ui.entities.map
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,22 +29,18 @@ class AllEventsScreenViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            (
-                tripId?.let {
-                    databaseRepository.getEventsByTrip(tripId)
-                } ?: databaseRepository.getEvents()
-            ).collect { events ->
-                _uiState.value =
-                    uiState.value.copy(
-                        results = events.map {it.map()},
-                    )
+            tripId?.let {
+                viewModelScope.launch {
+                    databaseRepository.getEventsByTrip(tripId).collect { events ->
+                        _uiState.value = uiState.value.copy(results = events.map { it.map() })
+                    }
+                }
+
             }
-        }
     }
 
-    suspend fun deleteEvent(eventId: Int) {
-       // databaseRepository.deleteEvent(eventId)
+    suspend fun deleteEvent(eventId: Long) {
+        databaseRepository.deleteEvent(eventId)
     }
 
     companion object {

@@ -35,33 +35,6 @@ fun AddTripScreen(
 ) {
     val scope = rememberCoroutineScope()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    var showStartDatePicker by remember {
-        mutableStateOf(false)
-    }
-    var showEndDatePicker by remember {
-        mutableStateOf(false)
-    }
-
-    if (showStartDatePicker)
-        DatePicker(onSuccess = {
-            viewModel.updateStartDate(it)
-            showStartDatePicker = false
-        }, onDismiss = {
-            showStartDatePicker = false
-        },
-            maxDate = state.endDate,
-            currentDate = state.startDate ?: state.endDate
-        )
-
-    if (showEndDatePicker) DatePicker(onSuccess = {
-        viewModel.updateEndDate(it)
-        showEndDatePicker = false
-    }, onDismiss = {
-        showEndDatePicker = false
-    },
-        minDate = state.startDate,
-        currentDate = state.endDate ?: state.startDate
-    )
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))) {
         OutlinedTextField(
@@ -79,9 +52,10 @@ fun AddTripScreen(
         )
 
         DateInputField(
-            value = state.startDate?.toShortString ?: "",
+            value = state.startDate,
             label = "Start date",
-            showDatePicker = { showStartDatePicker = true },
+            updateValue = viewModel::updateStartDate,
+            maxDate = state.endDate,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -90,15 +64,16 @@ fun AddTripScreen(
                 )
         )
         DateInputField(
-            value = state.endDate?.toShortString ?: "",
+            value = state.endDate,
             label = "End date",
-            showDatePicker = { showEndDatePicker = true },
+            updateValue = viewModel::updateEndDate,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
                     horizontal =
                     dimensionResource(id = R.dimen.middle_margin)
-                )
+                ),
+            minDate = state.startDate
         )
         OutlinedTextField(
             value = state.description ?: "",

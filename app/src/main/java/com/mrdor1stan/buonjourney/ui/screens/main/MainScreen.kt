@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,10 +38,12 @@ import com.mrdor1stan.buonjourney.ui.entities.AddTrip
 import com.mrdor1stan.buonjourney.ui.entities.AllEvents
 import com.mrdor1stan.buonjourney.ui.entities.AllTickets
 import com.mrdor1stan.buonjourney.ui.entities.AllTrips
+import com.mrdor1stan.buonjourney.ui.entities.EventDetails
 import com.mrdor1stan.buonjourney.ui.entities.MainMenu
 import com.mrdor1stan.buonjourney.ui.entities.Profile
 import com.mrdor1stan.buonjourney.ui.entities.TopLevelRoute
 import com.mrdor1stan.buonjourney.ui.entities.TripDetails
+import com.mrdor1stan.buonjourney.ui.screens.event.details.EventDetailsScreen
 import com.mrdor1stan.buonjourney.ui.screens.event.newone.AddEventScreen
 import com.mrdor1stan.buonjourney.ui.screens.profile.ProfileScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreen
@@ -162,7 +163,11 @@ fun MainScreen(modifier: Modifier = Modifier) {
                                 eventId = eventId
                             )
                         )
-                    })
+                    },
+                    navigateToEventDetailsScreen = { eventId ->
+                        navController.navigate(EventDetails(eventId))
+                    }
+                )
             }
 
             composable<AddEvent> {
@@ -172,6 +177,11 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     tripId = tripId,
                     eventId = eventId,
                     navigateBack = { navController.navigateUp() })
+            }
+
+            composable<EventDetails> {
+                val eventId = it.toRoute<EventDetails>().eventId
+                EventDetailsScreen(eventId = eventId, modifier = Modifier.fillMaxSize())
             }
 
         }

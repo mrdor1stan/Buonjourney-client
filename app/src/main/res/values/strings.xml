@@ -20,4 +20,8 @@
     <string name="to_date">To %1$s</string>
     <string name="add_label">Add</string>
     <string name="back_label">Back</string>
+    <string name="accommodation">Accommodation</string>
+    <string name="transport">Transport</string>
+    <string name="entertaimment">Entertainment</string>
+    <string name="no_type">No type</string>
 </resources>

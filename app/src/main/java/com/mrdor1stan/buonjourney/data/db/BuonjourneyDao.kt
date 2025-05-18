@@ -39,6 +39,10 @@ interface BuonjourneyDao {
     fun getTickets(): Flow<List<TicketDto>>
 
     @Transaction
+    @Query("SELECT * FROM tickets WHERE eventId=:eventId")
+    fun getTicketsByEvent(eventId: Long): Flow<List<TicketDto>>
+
+    @Transaction
     @Query("SELECT * FROM tickets WHERE id=:id")
     fun getTicket(id: Long): Flow<TicketDto>
 
@@ -62,6 +66,9 @@ interface BuonjourneyDao {
 
     @Query("SELECT * FROM events")
     fun getEvents(): Flow<List<EventDto>>
+
+    @Query("SELECT * FROM events WHERE id=:eventId")
+    fun getEvent(eventId: Long): Flow<EventDetailsDto>
 
     @Query("SELECT * FROM events WHERE tripId=:tripId")
     fun getEventsByTrip(tripId: Long): Flow<List<EventDto>>

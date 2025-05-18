@@ -96,7 +96,7 @@ dependencies {
     implementation(libs.places)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
-
+    implementation(libs.coil)
 //    implementation("androidx.paging:paging-compose-android:3.3.0")
 //    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
 //    implementation("androidx.room:room-paging:2.6.1")

@@ -27,7 +27,7 @@ data class TicketDetails(val id: Long)
 data class AllEvents(val tripId: Long?)
 
 @Serializable
-data class EventDetails(val id: Long)
+data class EventDetails(val eventId: Long)
 
 @Serializable
 object AddTicket

@@ -1,5 +1,6 @@
 package com.mrdor1stan.buonjourney.ui.common
 
+import android.widget.TimePicker
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,7 +39,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,7 +56,10 @@ import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.dateFromMillis
 import com.mrdor1stan.buonjourney.common.extentions.millis
+import com.mrdor1stan.buonjourney.common.extentions.toShortString
+import com.mrdor1stan.buonjourney.common.extentions.toString
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @Composable
 fun Headline(text: String, modifier: Modifier = Modifier) {
@@ -94,25 +101,6 @@ fun BodyText(text: String, modifier: Modifier = Modifier, maxLines: Int = Int.MA
 }
 
 @Composable
-fun ResourceIcon(@DrawableRes iconRes: Int, modifier: Modifier = Modifier) {
-    Icon(
-        imageVector = ImageVector.vectorResource(id = iconRes), contentDescription = null, modifier
-    )
-}
-
-@Composable
-fun TextIcon(text: String, @DrawableRes iconRes: Int, modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        ResourceIcon(iconRes, Modifier.size(24.dp))
-        BodyText(text)
-    }
-}
-
-@Composable
 fun ListHeader(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)?) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Headline(text = text, modifier = Modifier.weight(1f))
@@ -128,119 +116,24 @@ fun ListHeader(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePicker(
-    onSuccess: (LocalDateTime) -> Unit,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier,
-    currentDate: LocalDateTime? = null,
-    minDate: LocalDateTime? = null,
-    maxDate: LocalDateTime? = null
+fun PrimaryButton(
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = currentDate?.millis,
-        initialDisplayedMonthMillis = (currentDate ?: LocalDateTime.now()).millis,
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return when {
-                    minDate != null -> minDate.millis <= utcTimeMillis
-                    maxDate != null -> maxDate.millis >= utcTimeMillis
-                    else -> super.isSelectableDate(utcTimeMillis)
-                }
-            }
-        }
-    )
-    val confirmEnabled = remember {
-        derivedStateOf {
-            datePickerState.selectedDateMillis != null
-        }
-    }
-    DatePickerDialog(
-        modifier = modifier,
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    val date =
-                        datePickerState.selectedDateMillis?.let { onSuccess(it.dateFromMillis) }
-                },
-                enabled = confirmEnabled.value
-            ) {
-                Text(text = "OK")
-            }
-        }
+    Button(
+        onClick = onClick,
+        Modifier
+            .heightIn(min = 60.dp)
+            .then(modifier), enabled = enabled
     ) {
-        androidx.compose.material3.DatePicker(state = datePickerState)
-    }
-}
-
-@Composable
-fun PrimaryButton(text: String, onClick: () -> Unit, enabled: Boolean, modifier: Modifier = Modifier) {
-    Button(onClick = onClick, Modifier.heightIn(min = 60.dp).then(modifier), enabled = enabled) {
         Headline(text = text)
     }
 }
 
 
-@Composable
-fun DateInputField(
-    value: String,
-    label: String,
-    showDatePicker: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = {},
-        readOnly = true,
-        label = { Text(label) },
-        placeholder = { Text("MM/DD/YYYY") },
-        trailingIcon = {
-            Icon(Icons.Default.DateRange, contentDescription = "Select date")
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(value) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    waitForUpOrCancellation(pass = PointerEventPass.Initial)?.let {
-                        showDatePicker()
-                    }
-                }
-            }
-    )
-}
-
-
-@Composable
-fun TimeInputField(
-    value: String,
-    label: String,
-    showTimePicker: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = {},
-        readOnly = true,
-        label = { Text(label) },
-        placeholder = { Text("HH:MM") },
-        trailingIcon = {
-            Icon(Icons.Default.AccessTime, contentDescription = "Select time")
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(value) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    waitForUpOrCancellation(pass = PointerEventPass.Initial)?.let {
-                        showTimePicker()
-                    }
-                }
-            }
-    )
-}
 
 @Composable
 fun Loader(modifier: Modifier = Modifier) {

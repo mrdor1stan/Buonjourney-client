@@ -48,8 +48,9 @@ fun AllTripsScreen(
         TripElement(
             item,
             Modifier
-                .padding(16.dp)
-                .clickable { item.id?.let { navigateToItem(it) } }, actions = actions
+                .clickable { item.id?.let { navigateToItem(it) } }
+                .padding(16.dp),
+            actions = actions
         )
     }
 }
