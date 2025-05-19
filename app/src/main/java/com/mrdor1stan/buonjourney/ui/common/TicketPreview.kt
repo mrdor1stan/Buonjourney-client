@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Size
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,51 +32,53 @@ import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 @Composable
-fun TicketThumbnail(ticket: TicketState, size: Dp = 72.dp) {
+fun TicketThumbnail(ticket: TicketState, size: Dp = 72.dp, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    when {
-        ticket.mimeType?.startsWith("image") == true -> {
-            Image(
-                painter = rememberAsyncImagePainter(ticket.uri),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(size)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
-            return
-        }
-
-        ticket.mimeType == "application/pdf" -> {
-            val bitmap by produceState<Bitmap?>(initialValue = null, ticket.uri) {
-                value = loadPdfThumbnail(context, ticket.uri, size)
-            }
-
-            if (bitmap != null) {
+    Box(modifier) {
+        when {
+            ticket.mimeType?.startsWith("image") == true -> {
                 Image(
-                    bitmap = bitmap!!.asImageBitmap(),
+                    painter = rememberAsyncImagePainter(ticket.uri),
                     contentDescription = null,
                     modifier = Modifier
                         .size(size)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-            } else {
-                Icon(
-                    Icons.Default.PictureAsPdf,
-                    contentDescription = null,
-                    modifier = Modifier.size(size)
-                )
+                return
             }
-            return
-        }
 
-        else -> Icon(
-            Icons.AutoMirrored.Default.InsertDriveFile,
-            contentDescription = null,
-            modifier = Modifier.size(size)
-        )
+            ticket.mimeType == "application/pdf" -> {
+                val bitmap by produceState<Bitmap?>(initialValue = null, ticket.uri) {
+                    value = loadPdfThumbnail(context, ticket.uri, size)
+                }
+
+                if (bitmap != null) {
+                    Image(
+                        bitmap = bitmap!!.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(size)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.PictureAsPdf,
+                        contentDescription = null,
+                        modifier = Modifier.size(size)
+                    )
+                }
+                return
+            }
+
+            else -> Icon(
+                Icons.AutoMirrored.Default.InsertDriveFile,
+                contentDescription = null,
+                modifier = Modifier.size(size)
+            )
+        }
     }
 }
 

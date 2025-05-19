@@ -13,6 +13,7 @@
     <string name="move_item_upward">Move item upward</string>
     <string name="move_item_downward">Move item downward</string>
     <string name="rename_item">Rename item</string>
+    <string name="rename_button">Rename</string>
     <string name="remove_item">Remove item</string>
     <string name="cancel_button_label">Cancel</string>
     <string name="enter_new_name">Enter new name</string>

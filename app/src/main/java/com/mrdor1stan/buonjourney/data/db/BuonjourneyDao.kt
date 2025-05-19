@@ -46,6 +46,12 @@ interface BuonjourneyDao {
     @Query("SELECT * FROM tickets WHERE id=:id")
     fun getTicket(id: Long): Flow<TicketDto>
 
+    @Update
+    suspend fun updateTicket(ticket: TicketDto)
+
+    @Query("UPDATE tickets SET displayName = :displayName WHERE id=:ticketId")
+    suspend fun updateTicketName(ticketId: Long, displayName: String)
+
     @Delete
     suspend fun deleteTicket(ticket: TicketDto)
 

@@ -19,7 +19,11 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "TripsDetailsScreenViewModel"
 
-data class EventsDetailsScreenUiState(val event: EventState?, val tickets: List<TicketState>)
+data class EventsDetailsScreenUiState(
+    val event: EventState?,
+    val tickets: List<TicketState>,
+    val editedTicketId: Long?
+)
 
 class EventDetailsScreenViewModel(
     private val databaseRepository: DatabaseRepository,
@@ -27,7 +31,7 @@ class EventDetailsScreenViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        EventsDetailsScreenUiState(null, listOf())
+        EventsDetailsScreenUiState(null, listOf(), null)
     )
     val uiState = _uiState.asStateFlow()
 
@@ -42,6 +46,23 @@ class EventDetailsScreenViewModel(
                 )
             )
         }
+    }
+
+    fun showEditTicketPopup(ticketId: Long?) {
+        _uiState.value = uiState.value.copy(editedTicketId = ticketId)
+    }
+
+    fun onTicketRenamed(displayName: String) {
+        uiState.value.editedTicketId?.let { ticketId ->
+            viewModelScope.launch {
+                databaseRepository.updateTicketName(ticketId, displayName)
+                showEditTicketPopup(null)
+            }
+        }
+    }
+
+    suspend fun deleteTicket(ticketId: Long) {
+        databaseRepository.deleteTicket(ticketId)
     }
 
     init {

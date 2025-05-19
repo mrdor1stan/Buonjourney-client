@@ -44,6 +44,11 @@ class DatabaseRepository(
 
     fun getTicket(id: Long) = dao.getTicket(id)
 
+    suspend fun updateTicket(ticket: TicketDto) = dao.updateTicket(ticket)
+
+    suspend fun updateTicketName(ticketId: Long, displayName: String) =
+        dao.updateTicketName(ticketId, displayName)
+
     suspend fun deleteTicket(ticket: TicketDto) = dao.deleteTicket(ticket)
 
     suspend fun deleteTicket(id: Long) = dao.deleteTicket(id)
