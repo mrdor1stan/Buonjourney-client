@@ -39,10 +39,10 @@ class AddTripScreenViewModel(
             if (tripId != null) {
                 databaseRepository.getTrip(tripId)?.collect {
                     _uiState.value = uiState.value.copy(
-                        startDate = it.trip.startDate,
-                        endDate = it.trip.endDate,
-                        title = it.trip.title,
-                        description = it.trip.description,
+                        startDate = it?.trip?.startDate,
+                        endDate = it?.trip?.endDate,
+                        title = it?.trip?.title ?: "",
+                        description = it?.trip?.description,
                         isAddButtonEnabled = true
                     )
                 }

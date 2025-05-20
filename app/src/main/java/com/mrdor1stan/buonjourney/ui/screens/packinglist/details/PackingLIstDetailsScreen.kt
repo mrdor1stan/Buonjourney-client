@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.R
@@ -218,11 +220,13 @@ private fun PackingListItem(
     ) {
         when (state.screenMode) {
             PackingListScreenMode.Check -> {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                val isSelected = state.isCheckboxSelected
+                val isEnabled = state.item.nodeType == PackingListNodeDto.Type.ListItem
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.toggleable(value = isSelected, enabled = isEnabled, role = Role.Checkbox, onValueChange = onItemPacked)) {
                     Checkbox(
-                        checked = state.isCheckboxSelected,
+                        checked = isSelected,
                         onCheckedChange = onItemPacked,
-                        enabled = state.item.nodeType == PackingListNodeDto.Type.ListItem
+                        enabled = isEnabled
                     )
                     PackingListItemText(state.item)
                 }

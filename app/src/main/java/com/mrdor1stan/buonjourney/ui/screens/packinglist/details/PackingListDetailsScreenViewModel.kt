@@ -42,7 +42,7 @@ class PackingListDetailsScreenViewModel(
             databaseRepository.getTrip(tripId).collect { trip ->
                 _uiState.value =
                     uiState.value.copy(
-                        packingList = trip.packingItems.sortedBy { it.ordinal }
+                        packingList = trip?.packingItems?.sortedBy { it.ordinal }
                     )
             }
         }

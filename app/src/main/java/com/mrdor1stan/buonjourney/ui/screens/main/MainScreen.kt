@@ -35,8 +35,6 @@ import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.ui.common.Headline
 import com.mrdor1stan.buonjourney.ui.entities.AddEvent
 import com.mrdor1stan.buonjourney.ui.entities.AddTrip
-import com.mrdor1stan.buonjourney.ui.entities.AllEvents
-import com.mrdor1stan.buonjourney.ui.entities.AllTickets
 import com.mrdor1stan.buonjourney.ui.entities.AllTrips
 import com.mrdor1stan.buonjourney.ui.entities.EventDetails
 import com.mrdor1stan.buonjourney.ui.entities.MainMenu
@@ -154,8 +152,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
             composable<TripDetails> {
                 val tripId = it.toRoute<TripDetails>().id
                 TripsDetailsScreen(tripId = tripId,
-                    navigateToEventsListScreen = { navController.navigate(AllEvents(tripId)) },
-                    navigateToTicketListScreen = { navController.navigate(AllTickets(tripId)) },
                     navigateToAddEventScreen = { eventId ->
                         navController.navigate(
                             AddEvent(
@@ -165,7 +161,11 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         )
                     },
                     navigateToEventDetailsScreen = { eventId ->
-                        navController.navigate(EventDetails(eventId))
+                        navController.navigate(EventDetails(tripId, eventId))
+                    },
+                    navigateBack = { navController.navigateUp() },
+                    navigateToEditTripScreen = {
+                        navController.navigate(AddTrip(tripId))
                     }
                 )
             }
@@ -180,8 +180,20 @@ fun MainScreen(modifier: Modifier = Modifier) {
             }
 
             composable<EventDetails> {
+                val tripId = it.toRoute<EventDetails>().tripId
                 val eventId = it.toRoute<EventDetails>().eventId
-                EventDetailsScreen(eventId = eventId, modifier = Modifier.fillMaxSize())
+                EventDetailsScreen(
+                    eventId = eventId, modifier = Modifier.fillMaxSize(),
+                    navigateToEditEventScreen = {
+                        navController.navigate(
+                            AddEvent(
+                                tripId = tripId,
+                                eventId = eventId
+                            )
+                        )
+                    },
+                    navigateBack = { navController.navigateUp() }
+                )
             }
 
         }

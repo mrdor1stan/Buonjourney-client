@@ -23,7 +23,7 @@ interface BuonjourneyDao {
 
     @Transaction
     @Query("SELECT * FROM trips WHERE id=:id")
-    fun getTrip(id: Long): Flow<TripsDetailsDto>
+    fun getTrip(id: Long): Flow<TripsDetailsDto?>
 
     @Delete
     suspend fun deleteTrip(trip: TripDto)
@@ -74,7 +74,7 @@ interface BuonjourneyDao {
     fun getEvents(): Flow<List<EventDto>>
 
     @Query("SELECT * FROM events WHERE id=:eventId")
-    fun getEvent(eventId: Long): Flow<EventDetailsDto>
+    fun getEvent(eventId: Long): Flow<EventDetailsDto?>
 
     @Query("SELECT * FROM events WHERE tripId=:tripId")
     fun getEventsByTrip(tripId: Long): Flow<List<EventDto>>
@@ -83,7 +83,10 @@ interface BuonjourneyDao {
     suspend fun addEvent(event: EventDto)
 
     @Delete
-    suspend fun deleteEvent(trip: EventDto)
+    suspend fun deleteEvent(event: EventDto)
+
+    @Update
+    suspend fun updateEvent(event: EventDto)
 
     @Query("DELETE FROM events WHERE id=:id")
     suspend fun deleteEvent(id: Long)

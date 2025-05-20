@@ -48,6 +48,10 @@ class EventDetailsScreenViewModel(
         }
     }
 
+    suspend fun deleteEvent() {
+        databaseRepository.deleteEvent(eventId)
+    }
+
     fun showEditTicketPopup(ticketId: Long?) {
         _uiState.value = uiState.value.copy(editedTicketId = ticketId)
     }
@@ -69,8 +73,8 @@ class EventDetailsScreenViewModel(
         viewModelScope.launch {
             databaseRepository.getEvent(eventId).collect { event ->
                 _uiState.value = uiState.value.copy(
-                    event = event.event.map(),
-                    tickets = event.tickets.map(TicketDto::map)
+                    event = event?.event?.map(),
+                    tickets = event?.tickets?.map(TicketDto::map) ?: listOf()
                 )
             }
         }

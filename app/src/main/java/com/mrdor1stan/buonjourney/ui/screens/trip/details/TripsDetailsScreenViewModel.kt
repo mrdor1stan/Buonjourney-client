@@ -38,13 +38,14 @@ class TripsDetailsScreenViewModel(
         viewModelScope.launch {
             databaseRepository.getTrip(tripId).collect { trip ->
                 _uiState.value = uiState.value.copy(
-                    trip = trip.let {
-                        trip.map()
-                    }
+                    trip = trip?.map()
                 )
-
             }
         }
+    }
+
+    suspend fun deleteTrip() {
+        databaseRepository.deleteTrip(tripId)
     }
 
     companion object {

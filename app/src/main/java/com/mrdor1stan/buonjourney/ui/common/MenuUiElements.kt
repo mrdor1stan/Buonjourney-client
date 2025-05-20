@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.FlightTakeoff
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
@@ -40,12 +42,17 @@ fun TripElement(
     actions: List<ActionState<Long>>
 ) {
     Row(
-        modifier, horizontalArrangement = Arrangement.spacedBy(
+        modifier,
+        horizontalArrangement = Arrangement.spacedBy(
             dimensionResource(
                 id = R.dimen.middle_margin
             )
-        )
+        ),
+
+        verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(imageVector = Icons.Default.FlightTakeoff, contentDescription = null)
+
         Row(
             Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(
                 dimensionResource(
@@ -71,22 +78,27 @@ fun EventElement(
     modifier: Modifier = Modifier.padding(16.dp),
     actions: List<ActionState<Long>>
 ) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+
+        Icon(imageVector = Icons.Default.Event, contentDescription = null)
+
+        Title(text = state.title, modifier = Modifier.weight(1f))
+        ActionMenu(
+            actions = actions,
+            item = state,
+            modifier = Modifier.clearAndSetSemantics { })
+    }
+    state.description?.takeIf { it.isNotEmpty() }?.let {
+        Description(text = state.description)
+    }
+    state.address?.takeIf { it.isNotEmpty() }?.let {
         Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap))) {
-            Headline(text = state.title, modifier = Modifier.weight(1f))
-            ActionMenu(
-                actions = actions,
-                item = state,
-                modifier = Modifier.clearAndSetSemantics { })
-        }
-        state.description?.takeIf { it.isNotEmpty() }?.let {
-            Description(text = state.description)
-        }
-        state.address?.takeIf { it.isNotEmpty() }?.let {
-            Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap))) {
-                Icon(Icons.Default.Place, contentDescription = null)
-                Text(text = state.address)
-            }
+            Icon(Icons.Default.Place, contentDescription = null)
+            Text(text = state.address)
         }
     }
 

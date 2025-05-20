@@ -43,7 +43,7 @@ fun Headline(text: String, modifier: Modifier = Modifier) {
     Text(
         text,
         modifier,
-        style = MaterialTheme.typography.headlineSmall
+        style = MaterialTheme.typography.headlineSmall,
     )
 }
 

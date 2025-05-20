@@ -21,7 +21,7 @@ class DatabaseRepository(
 
     fun getTrips(): Flow<List<TripsDetailsDto>> = dao.getTrips()
 
-    fun getTrip(id: Long): Flow<TripsDetailsDto> = dao.getTrip(id)
+    fun getTrip(id: Long): Flow<TripsDetailsDto?> = dao.getTrip(id)
 
     suspend fun deleteTrip(trip: TripDto) = dao.deleteTrip(trip)
 
@@ -29,8 +29,10 @@ class DatabaseRepository(
 
     suspend fun addEvent(event: EventDto) = dao.addEvent(event)
 
+    suspend fun updateEvent(event: EventDto) = dao.updateEvent(event)
+
     fun getEvents(): Flow<List<EventDto>> = dao.getEvents()
-    fun getEvent(eventId: Long): Flow<EventDetailsDto> = dao.getEvent(eventId)
+    fun getEvent(eventId: Long): Flow<EventDetailsDto?> = dao.getEvent(eventId)
 
     fun getEventsByTrip(tripId: Long): Flow<List<EventDto>> = dao.getEventsByTrip(tripId)
 

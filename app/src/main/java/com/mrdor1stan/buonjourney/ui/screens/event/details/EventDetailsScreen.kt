@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -27,12 +29,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -43,9 +45,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.R
 import com.mrdor1stan.buonjourney.common.extentions.queryDisplayName
 import com.mrdor1stan.buonjourney.ui.common.ActionState
+import com.mrdor1stan.buonjourney.ui.common.Description
+import com.mrdor1stan.buonjourney.ui.common.Headline
 import com.mrdor1stan.buonjourney.ui.common.ItemsListWithHeader
 import com.mrdor1stan.buonjourney.ui.common.Loader
 import com.mrdor1stan.buonjourney.ui.common.TicketElement
+import com.mrdor1stan.buonjourney.ui.entities.EventState
+import com.mrdor1stan.buonjourney.ui.screens.event.newone.icon
+import com.mrdor1stan.buonjourney.ui.screens.event.newone.titleResId
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,7 +63,9 @@ fun EventDetailsScreen(
             eventId
         )
     ),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToEditEventScreen: () -> Unit,
+    navigateBack: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -66,7 +75,6 @@ fun EventDetailsScreen(
     ) { uri ->
         uri?.let {
             val contentResolver = context.contentResolver
-            // даємо персистентний доступ (щоб мати URI і після перезавантаження)
             contentResolver.takePersistableUriPermission(
                 it, Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
@@ -101,39 +109,22 @@ fun EventDetailsScreen(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
             ) {
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
+                EventHeader(
+                    event = event,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal =
-                            dimensionResource(id = R.dimen.middle_margin)
-                        )
-                        .padding(top = dimensionResource(id = R.dimen.small_margin))
-                ) {
-
-                    Button(
-                        onClick = {
-                            imagePickerLauncher.launch(arrayOf("image/*"))
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.AddPhotoAlternate, null)
-                        Spacer(Modifier.width(4.dp))
-                        Text("Add image")
-                    }
-
-                    Button(
-                        onClick = {
-                            pdfPickerLauncher.launch(arrayOf("application/pdf"))
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.PictureAsPdf, null)
-                        Spacer(Modifier.width(4.dp))
-                        Text("Add PDF")
-                    }
-                }
+                        .padding(dimensionResource(id = R.dimen.small_margin))
+                        .fillMaxWidth(),
+                    onEditEvent = navigateToEditEventScreen,
+                    onDeleteEvent = {
+                        scope.launch {
+                            viewModel.deleteEvent()
+                            navigateBack()
+                        }
+                    },
+                    onAddImage = {
+                        imagePickerLauncher.launch(arrayOf("image/*"))
+                    },
+                    onAddPdf = { pdfPickerLauncher.launch(arrayOf("application/pdf")) })
 
                 if (state.editedTicketId != null) {
                     RenameDialog(initialValue = state.tickets.firstOrNull { it.id == state.editedTicketId }?.displayName
@@ -160,7 +151,8 @@ fun EventDetailsScreen(
                     )
                 ) { ticket, actions ->
                     TicketElement(
-                        ticket, modifier = Modifier
+                        ticket,
+                        modifier = Modifier
                             .clickable {
                                 ticket.mimeType?.let { mimeType ->
                                     openTicket(
@@ -170,7 +162,8 @@ fun EventDetailsScreen(
                                     )
                                 }
                             }
-                            .padding(horizontal = dimensionResource(id = R.dimen.small_margin)), actions
+                            .padding(horizontal = dimensionResource(id = R.dimen.small_margin)),
+                        actions
                     )
                 }
 
@@ -236,4 +229,108 @@ fun RenameDialog(
             }
         }
     )
+}
+
+
+@Composable
+fun EventHeader(
+    event: EventState,
+    modifier: Modifier = Modifier,
+    onEditEvent: () -> Unit,
+    onDeleteEvent: () -> Unit,
+    onAddImage: () -> Unit,
+    onAddPdf: () -> Unit
+) {
+    Column(
+        modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            event.payload?.type?.let { type ->
+                Icon(type.icon, stringResource(id = type.titleResId), Modifier.size(100.dp))
+            }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
+            ) {
+                Headline(text = event.title)
+                event.description?.takeIf { it.isNotBlank() }?.let { Description(text = it) }
+                event.address?.takeIf { it.isNotBlank() }?.let {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap)),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Place, "Address")
+                        Text(text = it)
+                    }
+                }
+            }
+        }
+//TODO: dates
+        /*     Row(
+                 verticalAlignment = Alignment.CenterVertically,
+                 horizontalArrangement = Arrangement.spacedBy(
+                     dimensionResource(id = R.dimen.small_margin)
+                 ),
+                 modifier = Modifier.semantics(mergeDescendants = true) {}
+             ) {
+                 Icon(
+                     imageVector = Icons.Default.CalendarMonth,
+                     contentDescription = "Date",
+                     modifier = Modifier.size(24.dp)
+                 )
+                 Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))) {
+                     val date = "${trip.startDate ?: "..."} - ${trip.endDate ?: "..."}"
+                     BodyText(text = date)
+                 }
+             }*/
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(onClick = onEditEvent, modifier = Modifier.weight(1f)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap))) {
+                    Icon(Icons.Default.Edit, null)
+                    Text(text = "Edit event")
+                }
+            }
+            Button(onClick = onDeleteEvent, modifier = Modifier.weight(1f)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap))) {
+                    Icon(Icons.Default.Delete, null)
+                    Text(text = "Delete event")
+                }
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Button(
+                onClick = onAddImage,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.AddPhotoAlternate, null)
+                Spacer(Modifier.width(4.dp))
+                Text("Add image")
+            }
+
+            Button(
+                onClick = onAddPdf,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.PictureAsPdf, null)
+                Spacer(Modifier.width(4.dp))
+                Text("Add PDF")
+            }
+        }
+
+
+    }
 }

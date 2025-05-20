@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 fun AddEventScreen(
     tripId: Long,
     eventId: Long?,
-    viewModel: AddEventScreenViewModel = viewModel(factory = AddEventScreenViewModel.Factory(tripId)),
+    viewModel: AddEventScreenViewModel = viewModel(factory = AddEventScreenViewModel.Factory(tripId, eventId)),
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
@@ -368,7 +368,7 @@ fun AddEventScreen(
                     dimensionResource(id = R.dimen.middle_margin)
                 ), onClick = {
                 scope.launch {
-                    viewModel.addEvent()
+                    viewModel.saveEvent()
                     navigateBack()
                 }
             }, enabled = state.isAddButtonEnabled
