@@ -90,4 +90,8 @@ interface BuonjourneyDao {
 
     @Query("DELETE FROM events WHERE id=:id")
     suspend fun deleteEvent(id: Long)
+
+    @Transaction
+    @Query("SELECT * FROM trips")
+    fun getTripsWithEventsDetails(): Flow<List<TripWithEventsDetailsDto>>
 }

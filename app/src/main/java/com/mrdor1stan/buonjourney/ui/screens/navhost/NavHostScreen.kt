@@ -1,4 +1,4 @@
-package com.mrdor1stan.buonjourney.ui.screens.main
+package com.mrdor1stan.buonjourney.ui.screens.navhost
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -32,17 +32,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.mrdor1stan.buonjourney.R
-import com.mrdor1stan.buonjourney.ui.common.Headline
 import com.mrdor1stan.buonjourney.ui.entities.AddEvent
 import com.mrdor1stan.buonjourney.ui.entities.AddTrip
 import com.mrdor1stan.buonjourney.ui.entities.AllTrips
 import com.mrdor1stan.buonjourney.ui.entities.EventDetails
-import com.mrdor1stan.buonjourney.ui.entities.MainMenu
+import com.mrdor1stan.buonjourney.ui.entities.Home
 import com.mrdor1stan.buonjourney.ui.entities.Profile
 import com.mrdor1stan.buonjourney.ui.entities.TopLevelRoute
 import com.mrdor1stan.buonjourney.ui.entities.TripDetails
 import com.mrdor1stan.buonjourney.ui.screens.event.details.EventDetailsScreen
 import com.mrdor1stan.buonjourney.ui.screens.event.newone.AddEventScreen
+import com.mrdor1stan.buonjourney.ui.screens.home.HomeScreen
 import com.mrdor1stan.buonjourney.ui.screens.profile.ProfileScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.all.AllTripsScreen
 import com.mrdor1stan.buonjourney.ui.screens.trip.details.TripsDetailsScreen
@@ -52,13 +52,13 @@ private const val TAG = "MainScreen"
 
 val TOP_LEVEL_ROUTES = listOf(
     TopLevelRoute(name = "Trips", route = AllTrips, icon = Icons.Default.Flight),
-    TopLevelRoute(name = "Home", route = MainMenu, icon = Icons.Default.Home)
+    TopLevelRoute(name = "Home", route = Home, icon = Icons.Default.Home)
 )
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun NavHostScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    val startDestination = MainMenu
+    val startDestination = Home
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -134,8 +134,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     navigateToItem = { id -> navController.navigate(TripDetails(id)) })
             }
 
-            composable<MainMenu> {
-                Headline(text = "Main menu")
+            composable<Home> {
+                HomeScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    navigateToEventDetailsScreen = { tripId, eventId -> navController.navigate(EventDetails(tripId, eventId))},
+                    navigateToTripDetailsScreen = { tripId -> navController.navigate(TripDetails(tripId))},
+                    navigateToAddTripScreen = {navController.navigate(AddTrip(null))}, )
             }
 
             composable<AddTrip> {

@@ -8,6 +8,7 @@ import com.mrdor1stan.buonjourney.data.db.PackingListNodeDto
 import com.mrdor1stan.buonjourney.data.db.TicketDto
 import com.mrdor1stan.buonjourney.data.db.TripDto
 import com.mrdor1stan.buonjourney.data.db.TripsDetailsDto
+import com.mrdor1stan.buonjourney.data.db.TripWithEventsDetailsDto
 import kotlinx.coroutines.flow.Flow
 
 class DatabaseRepository(
@@ -20,6 +21,7 @@ class DatabaseRepository(
     suspend fun updateTrip(trip: TripDto) = dao.updateTrip(trip)
 
     fun getTrips(): Flow<List<TripsDetailsDto>> = dao.getTrips()
+    fun getTripsWithEventsDetails(): Flow<List<TripWithEventsDetailsDto>> = dao.getTripsWithEventsDetails()
 
     fun getTrip(id: Long): Flow<TripsDetailsDto?> = dao.getTrip(id)
 

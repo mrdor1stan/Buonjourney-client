@@ -26,3 +26,12 @@ data class EventDetailsDto(
     val tickets: List<TicketDto>,
 )
 
+data class TripWithEventsDetailsDto(
+    @Embedded val trip: TripDto,
+    @Relation(
+        entity = EventDto::class,
+        parentColumn = "id",
+        entityColumn = "tripId"
+    )
+    val events: List<EventDetailsDto>
+)

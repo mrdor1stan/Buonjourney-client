@@ -3,6 +3,7 @@ package com.mrdor1stan.buonjourney.ui.screens.trip.details
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.R
+import com.mrdor1stan.buonjourney.common.extentions.toShortString
 import com.mrdor1stan.buonjourney.ui.common.BodyText
 import com.mrdor1stan.buonjourney.ui.common.Description
 import com.mrdor1stan.buonjourney.ui.common.Headline
@@ -101,13 +103,14 @@ fun TripsDetailsScreen(
                     when (tabIndex) {
                         0 -> AllEventsScreen(
                             tripId = tripId,
+                            modifier = Modifier.fillMaxSize(),
                             navigateToAddScreen = navigateToAddEventScreen,
                             navigateToItem = navigateToEventDetailsScreen
                         )
 
                         1 -> PackingListDetailsScreen(
                             tripId = tripId,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 }
@@ -143,7 +146,7 @@ fun TripHeader(
                 modifier = Modifier.size(24.dp)
             )
             Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))) {
-                val date = "${trip.startDate ?: "..."} - ${trip.endDate ?: "..."}"
+                val date = "${trip.startDate?.toShortString ?: "..."} - ${trip.endDate?.toShortString ?: "..."}"
                 BodyText(text = date)
             }
         }

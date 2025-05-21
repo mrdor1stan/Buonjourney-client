@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mrdor1stan.buonjourney.ui.screens.login.LoginScreen
-import com.mrdor1stan.buonjourney.ui.screens.main.MainScreen
+import com.mrdor1stan.buonjourney.ui.screens.navhost.NavHostScreen
 import com.mrdor1stan.buonjourney.ui.screens.splash.SplashScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -17,7 +17,7 @@ fun BuonjourneyScreen(viewModel: BuonjourneyScreenViewModel = viewModel(factory 
     val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsState()
 
     when (isUserLoggedIn) {
-        true -> MainScreen(modifier = modifier)
+        true -> NavHostScreen(modifier = modifier)
         false -> LoginScreen(modifier = modifier.safeContentPadding())
         null -> SplashScreen(modifier)
     }

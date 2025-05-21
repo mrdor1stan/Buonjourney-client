@@ -44,6 +44,8 @@ fun AllTripsScreen(
             ),
         items = state.results,
         navigateToAddScreen = { navigateToAddScreen(null) },
+        emptyListMessage = "No trips were created so far",
+        emptyListButtonText = "Create first trip"
     ) { item, actions ->
         TripElement(
             item,

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class TopLevelRoute<T>(val name: String, val route: T, val icon: ImageVector)
 
 @Serializable
-object MainMenu
+object Home
 
 @Serializable
 object AllTrips
@@ -18,19 +18,7 @@ data class AddTrip(val id: Long?)
 data class TripDetails(val id: Long)
 
 @Serializable
-data class AllTickets(val tripId: Long)
-
-@Serializable
-data class TicketDetails(val id: Long)
-
-@Serializable
-data class AllEvents(val tripId: Long?)
-
-@Serializable
 data class EventDetails(val tripId: Long, val eventId: Long)
-
-@Serializable
-object AddTicket
 
 @Serializable
 class AddEvent(val tripId: Long, val eventId: Long?)

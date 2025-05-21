@@ -137,6 +137,8 @@ fun EventDetailsScreen(
                     header = "Tickets",
                     items = state.tickets,
                     navigateToAddScreen = null,
+                    emptyListMessage = "No tickets were added",
+                    emptyListButtonText = null,
                     actions = listOf(
                         ActionState(
                             stringResource(id = R.string.delete_button),
@@ -250,11 +252,14 @@ fun EventHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             event.payload?.type?.let { type ->
-                Icon(type.icon, stringResource(id = type.titleResId), Modifier.size(100.dp))
+                Icon(type.icon, null, Modifier.size(100.dp))
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
             ) {
+                event.payload?.type?.let { type ->
+                    Description(stringResource(id = type.titleResId))
+                }
                 Headline(text = event.title)
                 event.description?.takeIf { it.isNotBlank() }?.let { Description(text = it) }
                 event.address?.takeIf { it.isNotBlank() }?.let {
@@ -282,7 +287,7 @@ fun EventHeader(
                      modifier = Modifier.size(24.dp)
                  )
                  Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))) {
-                     val date = "${trip.startDate ?: "..."} - ${trip.endDate ?: "..."}"
+                     val date = "${trip.startDate?.toShortString ?: "..."} - ${trip.endDate?.toShortString ?: "..."}"
                      BodyText(text = date)
                  }
              }*/

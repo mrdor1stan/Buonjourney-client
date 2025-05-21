@@ -38,6 +38,8 @@ fun AllEventsScreen(
         modifier = modifier,
         items = state.results,
         navigateToAddScreen = { navigateToAddScreen(null) },
+        emptyListMessage = "No events were created",
+        emptyListButtonText = "Create first event",
         actions = listOf(
             ActionState(
                 stringResource(id = R.string.delete_button),

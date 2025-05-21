@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.FlightTakeoff
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.outlined.Delete
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -27,6 +29,8 @@ import com.mrdor1stan.buonjourney.common.extentions.toShortString
 import com.mrdor1stan.buonjourney.ui.entities.EventState
 import com.mrdor1stan.buonjourney.ui.entities.TicketState
 import com.mrdor1stan.buonjourney.ui.entities.TripState
+import com.mrdor1stan.buonjourney.ui.screens.event.newone.icon
+import com.mrdor1stan.buonjourney.ui.screens.event.newone.titleResId
 import java.time.LocalDateTime
 
 fun <T> getDefaultActions() = listOf<ActionState<T>>(
@@ -68,7 +72,11 @@ fun TripElement(
             TripDateRange(state.startDate, state.endDate)
         }
 
-        ActionMenu(actions = actions, item = state, modifier = Modifier.clearAndSetSemantics { })
+        if (actions.isNotEmpty())
+            ActionMenu(
+                actions = actions,
+                item = state,
+                modifier = Modifier.clearAndSetSemantics { })
     }
 }
 
@@ -79,29 +87,42 @@ fun EventElement(
     actions: List<ActionState<Long>>
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
-        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin)),
         modifier = modifier
     ) {
-
-        Icon(imageVector = Icons.Default.Event, contentDescription = null)
-
-        Title(text = state.title, modifier = Modifier.weight(1f))
-        ActionMenu(
-            actions = actions,
-            item = state,
-            modifier = Modifier.clearAndSetSemantics { })
-    }
-    state.description?.takeIf { it.isNotEmpty() }?.let {
-        Description(text = state.description)
-    }
-    state.address?.takeIf { it.isNotEmpty() }?.let {
-        Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap))) {
-            Icon(Icons.Default.Place, contentDescription = null)
-            Text(text = state.address)
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
+        ) {
+            state.payload?.type?.let {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap)),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = it.icon, contentDescription = null)
+                    Description(text = stringResource(id = it.titleResId))
+                }
+            }
+            Title(text = state.title)
+            state.description?.takeIf { it.isNotEmpty() }?.let {
+                Description(text = state.description)
+            }
+            state.address?.takeIf { it.isNotEmpty() }?.let {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap)),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Place, contentDescription = null)
+                    Text(text = state.address)
+                }
+            }
         }
+        if (actions.isNotEmpty())
+            ActionMenu(
+                actions = actions,
+                item = state,
+                modifier = Modifier.clearAndSetSemantics { })
     }
-
 }
 
 
@@ -139,7 +160,12 @@ fun TicketElement(
             )
         )
     ) {
-        TicketThumbnail(state)
+        TicketThumbnail(
+            ticket = state,
+            modifier = Modifier
+                .size(72.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
         state.displayName?.let { Text(text = it, Modifier.weight(1f)) }
         ActionMenu(actions = actions, item = state, modifier = Modifier.clearAndSetSemantics { })
     }
