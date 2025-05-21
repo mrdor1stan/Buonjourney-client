@@ -2,12 +2,14 @@ package com.mrdor1stan.buonjourney.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -89,8 +91,8 @@ fun ListHeader(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit
 fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
@@ -112,11 +114,14 @@ fun PrimaryButton(
 
 @Composable
 fun Loader(modifier: Modifier = Modifier) {
-    CircularProgressIndicator(
-        modifier = modifier
-            .background(color = Color.DarkGray.copy(alpha = 0.2f))
-            .fillMaxSize()
-    )
+    Box(Modifier
+        .background(color = Color.DarkGray.copy(alpha = 0.2f))
+        .fillMaxSize()
+        .then(modifier)) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(100.dp).align(Alignment.Center)
+        )
+    }
 }
 
 @Composable

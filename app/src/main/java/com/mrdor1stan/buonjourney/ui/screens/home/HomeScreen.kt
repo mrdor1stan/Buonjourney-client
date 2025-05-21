@@ -38,10 +38,10 @@ import com.mrdor1stan.buonjourney.ui.common.Title
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     viewModel: HomeScreenViewModel = viewModel(
         factory = HomeScreenViewModel.Factory,
     ),
-    modifier: Modifier = Modifier,
     navigateToTripDetailsScreen: (Long) -> Unit,
     navigateToEventDetailsScreen: (Long, Long) -> Unit,
     navigateToAddTripScreen: () -> Unit
@@ -69,7 +69,10 @@ fun HomeScreen(
                             viewModel.loadTrip(page)
                         }
                     }
-                    Headline(text = "Home page")
+                    Headline(
+                        text = "Home page",
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.middle_margin))
+                    )
                     Title(text = "Trips", modifier = Modifier
                         .semantics { heading() }
                         .padding(dimensionResource(id = R.dimen.middle_margin))
