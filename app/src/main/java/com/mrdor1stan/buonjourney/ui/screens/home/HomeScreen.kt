@@ -113,7 +113,7 @@ fun HomeScreen(
                                     TicketCard(
                                         state = it, modifier = Modifier
                                             .clip(RoundedCornerShape(8.dp))
-                                            .size(width = 152.dp, height = 200.dp)
+                                            .size(width = 180.dp, height = 200.dp)
                                     )
 
                                 }

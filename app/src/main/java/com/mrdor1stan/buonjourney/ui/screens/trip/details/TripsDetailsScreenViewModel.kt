@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.mrdor1stan.buonjourney.BuonjourneyApplication
 import com.mrdor1stan.buonjourney.data.DatabaseRepository
 import com.mrdor1stan.buonjourney.data.db.EventDto

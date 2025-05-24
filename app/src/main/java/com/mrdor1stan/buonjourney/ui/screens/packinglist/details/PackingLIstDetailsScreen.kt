@@ -3,6 +3,7 @@ package com.mrdor1stan.buonjourney.ui.screens.packinglist.details
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -53,13 +54,13 @@ fun PackingListDetailsScreen(
         )
     ), modifier: Modifier = Modifier
 ) {
-    var animateScrollToLastAddedItem by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val state by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
+    var animateScrollToLastAddedItem by remember { mutableStateOf(false) }
 
     LaunchedEffect(animateScrollToLastAddedItem) {
-        val index = state.packingList?.indexOfFirst { it == state.packingList?.maxBy { it.id } }
+        val index = state.packingList?.lastIndex
         index.takeIf { animateScrollToLastAddedItem }?.let {
             listState.animateScrollToItem(it)
             animateScrollToLastAddedItem = false
@@ -82,7 +83,7 @@ fun PackingListDetailsScreen(
                     value = state.input,
                     onValueChange = viewModel::updateInput,
                     modifier = Modifier.weight(1f),
-                    placeholder = {Text("Enter item or category")}
+                    placeholder = { Text("Enter item or category") }
                 )
                 IconButton(
                     onClick = {
@@ -147,6 +148,7 @@ fun PackingListDetailsScreen(
                                 }.all { it.isPacked }
                         else item.isPacked
 
+                    val isListItem = item.nodeType == PackingListNodeDto.Type.ListItem
                     PackingListItem(
                         PackingListItemUiState(
                             item = item,
@@ -160,7 +162,9 @@ fun PackingListDetailsScreen(
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .padding(
-                                start = dimensionResource(id = R.dimen.small_margin),
+                                start = if (isListItem) dimensionResource(
+                                    id = R.dimen.middle_margin
+                                ) else dimensionResource(id = R.dimen.small_margin),
                                 end = dimensionResource(id = R.dimen.small_margin),
                             ),
                         onItemPacked = {
@@ -220,15 +224,24 @@ private fun PackingListItem(
     ) {
         when (state.screenMode) {
             PackingListScreenMode.Check -> {
+                val isListItem = state.item.nodeType == PackingListNodeDto.Type.ListItem
                 val isSelected = state.isCheckboxSelected
-                val isEnabled = state.item.nodeType == PackingListNodeDto.Type.ListItem
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.toggleable(value = isSelected, enabled = isEnabled, role = Role.Checkbox, onValueChange = onItemPacked)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .toggleable(
+                            value = isSelected,
+                            enabled = isListItem,
+                            role = Role.Checkbox,
+                            onValueChange = onItemPacked
+                        )
+                ) {
                     Checkbox(
                         checked = isSelected,
                         onCheckedChange = onItemPacked,
-                        enabled = isEnabled
+                        enabled = isListItem
                     )
-                    PackingListItemText(state.item)
+                    PackingListItemText(state.item, Modifier.weight(1f))
                 }
             }
 

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.mrdor1stan.buonjourney.R
@@ -96,11 +98,9 @@ fun PrimaryButton(
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonColors(
+        colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-            disabledContentColor = MaterialTheme.colorScheme.onErrorContainer
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
         modifier = Modifier
             .heightIn(min = 60.dp)
@@ -141,6 +141,7 @@ fun Chip(
     ) {
         Row(modifier = Modifier
             .toggleable(
+                role = Role.RadioButton,
                 value = isSelected,
                 onValueChange = {
                     onSelectionChanged()

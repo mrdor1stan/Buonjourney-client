@@ -59,7 +59,7 @@ class AddEventScreenViewModel(
                         _uiState.value = uiState.value.copy(
                             title = event.title,
                             description = event.description ?: uiState.value.description,
-                            eventType = event.payload?.type ?: uiState.value.eventType,
+                            eventType = event.payload?.eventType ?: uiState.value.eventType,
                             address = event.address ?: uiState.value.address,
                             isAddButtonEnabled = true
                         )

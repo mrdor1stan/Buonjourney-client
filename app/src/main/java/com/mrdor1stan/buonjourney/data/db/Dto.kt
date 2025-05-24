@@ -1,9 +1,15 @@
+@file:UseSerializers(LocalDateTimeSerializer::class, LocalTimeSerializer::class)
+
 package com.mrdor1stan.buonjourney.data.db
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
+import com.mrdor1stan.buonjourney.common.extentions.LocalDateTimeSerializer
+import com.mrdor1stan.buonjourney.common.extentions.LocalTimeSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -76,7 +82,9 @@ data class EventDto(
     val tripId: Long,
     val payload: Payload?
 ) {
-    sealed class Payload(val type: Type) {
+    @Serializable
+    sealed class Payload(val eventType: Type) {
+        @Serializable
         data class TransportData(
             val departureDate: LocalDateTime?,
             val departureTime: LocalTime?,
@@ -84,8 +92,10 @@ data class EventDto(
             val arrivalTime: LocalTime?
         ) : Payload(Type.Transport)
 
+        @Serializable
         data object NoData : Payload(Type.NoType)
 
+        @Serializable
         data class EntertainmentData(
             val startDate: LocalDateTime?,
             val startTime: LocalTime?,
@@ -93,6 +103,7 @@ data class EventDto(
             val endTime: LocalTime?
         ) : Payload(Type.Entertainment)
 
+        @Serializable
         data class AccommodationData(
             val checkInDate: LocalDateTime?,
             val checkInTimeFrom: LocalTime?,

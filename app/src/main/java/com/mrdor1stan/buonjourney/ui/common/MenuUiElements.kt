@@ -94,7 +94,7 @@ fun EventElement(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
         ) {
-            state.payload?.type?.let {
+            state.payload?.eventType?.let {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap)),
                     verticalAlignment = Alignment.CenterVertically

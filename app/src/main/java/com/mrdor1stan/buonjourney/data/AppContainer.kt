@@ -3,8 +3,6 @@ package com.mrdor1stan.buonjourney.data
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.mrdor1stan.buonjourney.data.db.BuonjourneyDatabase
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 const val USER_PREFERENCES_NAME = "user_preferences_name"
 

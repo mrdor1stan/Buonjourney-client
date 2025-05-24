@@ -251,13 +251,13 @@ fun EventHeader(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.middle_margin)),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            event.payload?.type?.let { type ->
+            event.payload?.eventType?.let { type ->
                 Icon(type.icon, null, Modifier.size(100.dp))
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))
             ) {
-                event.payload?.type?.let { type ->
+                event.payload?.eventType?.let { type ->
                     Description(stringResource(id = type.titleResId))
                 }
                 Headline(text = event.title)

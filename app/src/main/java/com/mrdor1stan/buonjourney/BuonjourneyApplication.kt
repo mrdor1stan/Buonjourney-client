@@ -1,7 +1,6 @@
 package com.mrdor1stan.buonjourney
 
 import android.app.Application
-import com.google.android.libraries.places.api.Places
 import com.mrdor1stan.buonjourney.data.AppContainer
 
 class BuonjourneyApplication : Application() {

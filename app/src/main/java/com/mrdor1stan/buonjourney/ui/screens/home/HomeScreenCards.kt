@@ -1,5 +1,6 @@
 package com.mrdor1stan.buonjourney.ui.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.FlightTakeoff
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -63,7 +65,8 @@ fun TripCard(
                     modifier = Modifier.size(24.dp)
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_margin))) {
-                    val date = "${state.startDate?.toShortString ?: "..."} - ${state.endDate?.toShortString ?: "..."}"
+                    val date =
+                        "${state.startDate?.toShortString ?: "..."} - ${state.endDate?.toShortString ?: "..."}"
                     BodyText(text = date)
                 }
             }
@@ -82,7 +85,7 @@ fun EventCard(
         modifier = modifier
     ) {
 
-        state.payload?.type?.let {
+        state.payload?.eventType?.let {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_gap)),
                 verticalAlignment = Alignment.CenterVertically,
@@ -119,13 +122,18 @@ fun TicketCard(
         TicketThumbnail(
             state,
             Modifier
+                .background(MaterialTheme.colorScheme.surfaceContainer)
                 .weight(5f)
                 .fillMaxWidth()
         )
-        state.displayName?.let {
+        val displayName = StringBuilder()
+        state.eventName?.let { displayName.append(it) }
+        if (state.eventName != null && state.displayName != null) displayName.append(" / ")
+        state.displayName?.let { displayName.append(it) }
+        displayName.toString().takeIf { it.isNotEmpty() }?.let {
             Text(
                 text = it,
-                overflow = TextOverflow.MiddleEllipsis,
+                overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.small_margin))

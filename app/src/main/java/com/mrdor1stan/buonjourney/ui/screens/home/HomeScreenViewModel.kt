@@ -40,7 +40,7 @@ class HomeScreenViewModel(
     fun loadTrip(index: Int) {
         tripIndex = index.coerceIn(trips.indices)
         val events = trips[tripIndex].events.map { it.map() }
-        val tickets = trips[tripIndex].events.flatMap { it.tickets }.map { it.map() }
+        val tickets = trips[tripIndex].events.associateWith { event -> event.tickets.map { it.map(eventName = event.event.title) } }.values.flatten()
         _uiState.value = uiState.value.copy(events = events, tickets = tickets, selectedTripIndex = tripIndex)
     }
 

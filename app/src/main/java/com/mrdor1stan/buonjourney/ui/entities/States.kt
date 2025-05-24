@@ -53,7 +53,7 @@ data class EventState(
     val description: String?,
     val address: String?,
     val payload: EventDto.Payload?,
-    override val id: Long
+    override val id: Long,
 ): DataState<Long>
 
 fun EventDto.map() = EventState(
@@ -70,12 +70,14 @@ data class TicketState(
     override val id: Long,
     val uri: Uri,
     val mimeType: String?,
-    val displayName: String?
+    val displayName: String?,
+    val eventName: String?
 ): DataState<Long>
 
-fun TicketDto.map() = TicketState(
+fun TicketDto.map(eventName: String? = null) = TicketState(
     id = id,
     uri = uri.toUri(),
     mimeType = mimeType,
-    displayName = displayName
+    displayName = displayName,
+    eventName = eventName
 )
